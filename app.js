@@ -4,8 +4,6 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
 
 var app = express();
 
@@ -19,8 +17,22 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+//------Modulos instalados para o Front-End
+app.use(express.static(__dirname + '/node_modules/axios/dist'));
+app.use(express.static(__dirname + '/node_modules/bootstrap/dist'));
+app.use(express.static(__dirname + '/node_modules/jquery/dist'));
+app.use(express.static(__dirname + '/node_modules/popper.js/dist'));
+app.use(express.static(__dirname + '/node_modules/toastr/build'));
+app.use(express.static(__dirname + '/node_modules/moment/min'));
+//------END
+
+
+//------Arquivos de rotas
+var indexRouter = require('./routes/index');
+
+
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
+//------END
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
