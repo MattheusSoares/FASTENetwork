@@ -8,4 +8,17 @@ router.get('/', function(req, res, next) {
   });
 });
 
+router.get('/cadastrar-rede', function(req, res, next) {
+  res.render('cadastrar-rede',{
+    css: ''
+  });
+});
+
+router.get('/result', function(req, res, next) {
+  res.render('result',{
+    css: ''
+  });
+});
+
+
 module.exports = router;
