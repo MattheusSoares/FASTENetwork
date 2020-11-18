@@ -8,6 +8,9 @@ router.post('/sendData', (req, res) =>{
     
     if (req.body != null) {
         createNetwork.creatAndSave(req, res);
+
+
+        
         res.redirect('/result?msg=success');
     } else {
         res.redirect('/result?msg=failed');
