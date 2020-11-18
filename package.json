@@ -13,9 +13,11 @@
     "debug": "~2.6.9",
     "ejs": "~2.6.1",
     "express": "~4.16.1",
+    "fs-extra": "^9.0.1",
     "http-errors": "~1.6.3",
     "jquery": "^3.5.1",
     "morgan": "~1.9.1",
+    "shelljs": "^0.8.4",
     "toastr": "^2.1.4"
   }
 }
