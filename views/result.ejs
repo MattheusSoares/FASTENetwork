@@ -46,6 +46,12 @@
 
     document.getElementById('resultado').innerHTML = "Os dados foram repassados para o backend com sucesso"
   }
+  else if (result == 'existFile') {
+    toastr.clear()
+    toastr.warning('O nome da rede informado já existe!', 'Aviso!')
+
+    document.getElementById('resultado').innerHTML = "Favor preencher o formulário novamente"
+  }
   else {
     toastr.clear()
     toastr.error('Ocorreu um erro ao realizar a operação!', 'Erro!')
