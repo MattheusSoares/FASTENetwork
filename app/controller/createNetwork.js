@@ -420,4 +420,13 @@ module.exports = {
 
    },
 
+   verifyNetworkName(req,res){
+         const networks = path.join(process.cwd(), 'network');
+         const pathNetworks = networks + '/' + req.body.nomeRede;
+         if (fs.existsSync(pathNetworks)) {
+            return "exist";
+         }
+         return "notExist";
+   }
+
 }
