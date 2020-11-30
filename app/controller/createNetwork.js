@@ -73,18 +73,18 @@ module.exports = {
          } );
       };
       //Leitura linha por linha
-      async function processLineByLine(file) {
-         const fileStream = fs.createReadStream(file);
+      // async function processLineByLine(file) {
+      //    const fileStream = fs.createReadStream(file);
       
-         const rl = readline.createInterface({
-         input: fileStream,
-         crlfDelay: Infinity
-         } );
-         for await (const line of rl) {
-         // Each line in input.txt will be successively available here as `line`.
-         console.log(`${line}`);
-         };
-      };
+      //    const rl = readline.createInterface({
+      //    input: fileStream,
+      //    crlfDelay: Infinity
+      //    } );
+      //    for await (const line of rl) {
+      //    // Each line in input.txt will be successively available here as `line`.
+      //    console.log(`${line}`);
+      //    };
+      // };
       //Leitura do diretorio
       const readDirectory = (path) => {
          return new Promise ( (resolve, reject) => {
