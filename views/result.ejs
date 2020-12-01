@@ -16,7 +16,7 @@
 
             <div class="card">
               <div class="card-title">
-                <h3>Resultado Formulário</h3>
+                <h3 id="title"></h3>
               </div>
 
               <h6 id="resultado">
@@ -33,33 +33,7 @@
 
 <%- include('importScript'); -%>
 
-<script type="text/javascript">
-  const url_string = window.location.href;
-
-  var url = new URL(url_string);
-  var result = url.searchParams.get("msg");
-
-
-  if (result == 'success') {
-    toastr.clear()
-    toastr.success('Operação realizada com sucesso!', 'Sucesso!')
-
-    document.getElementById('resultado').innerHTML = "Os dados foram repassados para o backend com sucesso"
-  }
-  else if (result == 'existFile') {
-    toastr.clear()
-    toastr.warning('O nome da rede informado já existe!', 'Aviso!')
-
-    document.getElementById('resultado').innerHTML = "Favor preencher o formulário novamente"
-  }
-  else {
-    toastr.clear()
-    toastr.error('Ocorreu um erro ao realizar a operação!', 'Erro!')
-
-    document.getElementById('resultado').innerHTML = "Ocorreu um erro com a operação, os dados não foram lidos"
-  }
-
-</script>
+<script src="/js/resultScript.js"></script>
 
 </body>
 

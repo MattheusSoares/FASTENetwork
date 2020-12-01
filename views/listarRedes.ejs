@@ -1,0 +1,54 @@
+<%- include('head'); -%>
+<%- include('sidebar'); -%>
+<%- include('header'); -%>
+
+
+<div class="content-wrap">
+
+  <div class="main">
+    <div class="container-fluid">
+
+      <!-- /# row -->
+      <section id="main-content">
+        <div class="row">
+
+          <div class="col-lg-12">
+
+            <div class="card">
+              <div class="card-title">
+                <h3>Redes</h3>
+              </div>
+
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col">Nome da Rede</th>
+                    <th scope="col">Descrição</th>
+                    <th scope="col">Número de Organizações</th>
+                    <th scope="col">Número de Nós por Organização</th>
+                    <th scope="col">Nome do Canal</th>
+                    <th scope="col"></th>
+                  </tr>              
+                </thead>
+                <tbody id="listRedes">
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+
+<%- include('importScript'); -%>
+<script src="/js/getNetworkScript.js"></script>
+<script type="text/javascript">
+
+
+</script>
+
+</body>
+
+</html>

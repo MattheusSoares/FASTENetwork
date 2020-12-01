@@ -29,9 +29,9 @@ app.use(express.static(__dirname + '/node_modules/moment/min'));
 
 //------Arquivos de rotas
 var indexRouter = require('./routes/index');
-var formRouter = require('./routes/form');
+var networkRouter = require('./routes/network');
 
-app.use('/form', formRouter);
+app.use('/network', networkRouter);
 app.use('/', indexRouter);
 //------END
 

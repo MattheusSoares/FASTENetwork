@@ -8,14 +8,26 @@ router.get('/', function(req, res, next) {
   });
 });
 
-router.get('/cadastrar-rede', function(req, res, next) {
-  res.render('cadastrar-rede',{
+router.get('/cadastrarRede', function(req, res, next) {
+  res.render('cadastrarRede',{
+    css: ''
+  });
+});
+
+router.get('/listarRedes', function(req, res, next) {
+  res.render('listarRedes',{
     css: ''
   });
 });
 
 router.get('/result', function(req, res, next) {
   res.render('result',{
+    css: ''
+  });
+});
+
+router.get('/resultDelete', function(req, res, next) {
+  res.render('resultDelete',{
     css: ''
   });
 });
