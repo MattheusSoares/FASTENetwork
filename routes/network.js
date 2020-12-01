@@ -1,24 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const createNetwork = require('../app/controller/createNetwork')
-const mongodb = require('../app/database/mongodb/Server')
-var fs = require('fs');
+const rimraf = require("rimraf");
 const path = require('path');
 const RedeDatabase = require('../app/database/models/RedeModel')
-
-var deleteFolderRecursive = function(path) {
-    if( fs.existsSync(path) ) {
-        fs.readdirSync(path).forEach(function(file,index){
-        var curPath = path + "/" + file;
-            if(fs.lstatSync(curPath).isDirectory()) {
-                deleteFolderRecursive(curPath);
-            } else {
-                fs.unlinkSync(curPath);
-            }
-        });
-    fs.rmdirSync(path);
-    }
-};
 
 //Insere os dados na database e Network
 router.post('/routeCreateNetwork', async (req, res) => {
@@ -62,7 +47,9 @@ router.post('/routeDeleteNetwork', async (req, res)=>{
     const networks = path.join(process.cwd(), 'network');
     const pathNetwork = networks + '/' + networkName;
 
-    deleteFolderRecursive(pathNetwork);
+    rimraf(pathNetwork, function () {
+        console.log("Network deleted!"); 
+   });
 
     RedeDatabase.findByIdAndDelete(idRede, function (err) {
         if (err) res.redirect('/resultDelete?msg=error');
