@@ -17,4 +17,5 @@ Profiles:
         Consortiums:
             SampleConsortium:
                 Organizations:
-OrganizationsOrgs                   
+                    - *OrganizationsOrgs            
+       

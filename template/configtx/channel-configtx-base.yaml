@@ -4,4 +4,4 @@
         Application:
             <<: *ApplicationDefaults
             Organizations:
-OrganizationsOrgs
+                - *OrganizationsOrgs

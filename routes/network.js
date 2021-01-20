@@ -53,7 +53,7 @@ router.post('/routeDeleteNetwork', async (req, res)=>{
 
     RedeDatabase.findByIdAndDelete(idRede, function (err) {
         if (err) res.redirect('/resultDelete?msg=error');
-            res.redirect('/resultDelete?msg=success');        
+            res.redirect('/resultDelete?msg=success');     
     });
     
 });

@@ -9,7 +9,7 @@ module.exports = {
    async creatAndSave(req,res) {
       const {nomeRede, descricaoRede, nomeOrg, numPeer, numOrg, nomeCanal} = req.body;
 
-      const networkName = nomeRede;
+      const networkName = nomeRede.split(" ").join("_");
       
       let portNumber = 7051;
       let portNumber2 = 7051;
@@ -26,12 +26,14 @@ module.exports = {
 
       const networks = path.join(process.cwd(), 'network');
       const pathNetworks = networks + '/' + networkName;
-      // Define as pastas dentro de template
+      const bin = networks + '/bin/';
+
+      // Define os arquivos da pasta template
       const templateBase = path.join(process.cwd(), '/template/base');
       const templateNetworkConfig = path.join(process.cwd(), '/template/networkconfig');
       const templateCrypto = path.join(process.cwd(), '/template/crypto');
       const templateConfigTx = path.join(process.cwd(), '/template/configtx');
-      // Define os arquivos da pasta template
+      // Define os arquivos da pasta base
       const baseFile = path.resolve(__dirname, templateBase, 'base.yaml');
       const dockerComposeFile = path.resolve(__dirname, templateBase, 'docker-compose.yaml');
       const dockerComposeCAFile = path.resolve(__dirname, templateBase, 'docker-compose-ca.yaml');
@@ -39,6 +41,7 @@ module.exports = {
       const dockerComposeCouchDBFile = path.resolve(__dirname, templateBase, 'docker-compose-couchdb.yaml');
       const dockerComposeOrdererFile = path.resolve(__dirname, templateBase, 'docker-compose-orderer.yaml');
       const dockerComposePeerFile = path.resolve(__dirname, templateBase, 'docker-compose-peer.yaml');
+      // Define os arquivos da pasta configtx
       const configtxFile = path.resolve(__dirname, templateConfigTx, 'configtx.yaml');
       const aplicationConfigtxBase = path.resolve(__dirname, templateConfigTx, 'aplication-configtx-base.yaml');
       const channelConfigtxBase = path.resolve(__dirname, templateConfigTx, 'channel-configtx-base.yaml');
@@ -46,8 +49,12 @@ module.exports = {
       const ordererConfigtxBase = path.resolve(__dirname, templateConfigTx, 'orderer-configtx-base.yaml');
       const ordererPeerConfigtxBase = path.resolve(__dirname, templateConfigTx, 'ordererpeer-configtx-base.yaml');
       const peerConfigtxBase = path.resolve(__dirname, templateConfigTx, 'peer-configtx-base.yaml');
+      const newLineChannelConfigtxBase = path.resolve(__dirname, templateConfigTx, 'new-line-channel-configtx-base.yaml');
+      const newLineOrdererGenesisConfigtxBase = path.resolve(__dirname, templateConfigTx, 'new-line-orderegenesis-configtx-base.yaml');
+      // Define os arquivos da pasta crypto
       const cryptogenFile = path.resolve(__dirname, templateCrypto, 'cryptogen.yaml');
       const peerCryptogenFile = path.resolve(__dirname, templateCrypto, 'peer-cryptogen.yaml');
+      // Define os arquivos da pasta networkconfig
       const networkConfigFile = path.resolve(__dirname, templateNetworkConfig, 'network-config.yaml');
       const channelFile = path.resolve(__dirname, templateNetworkConfig, 'channel.yaml');
       const peerChannelFile = path.resolve(__dirname, templateNetworkConfig, 'peerchannel.yaml');
@@ -59,7 +66,7 @@ module.exports = {
       const certificateAuthoritiesFile = path.resolve(__dirname, templateNetworkConfig, 'certificateAuthorities.yaml');
       const caFile = path.resolve(__dirname, templateNetworkConfig, 'ca.yaml');
       const orgFile = path.resolve(__dirname, templateNetworkConfig, 'org.yaml');
-
+      //Leitura de um arquivo
       const readFile = (file) => {
          return new Promise( (resolve, reject) => {
          fs.readFile(file, (err, data) => {
@@ -91,8 +98,14 @@ module.exports = {
          fs.readdir(path, function(err, items) {
             if (err)
                reject(err);
-            else
-               resolve(items);
+            else {
+               for (var i=0; i<items.length; i++) {
+                  var file =  items[i];
+                  if(file.includes("sk")){
+                      resolve(file);
+                  }         
+              }
+            }
          } );
          } );
       };
@@ -217,12 +230,13 @@ module.exports = {
          }
          } )
       };
-
-
+      //Cria as pastas e arquivos da network
       async function generateFiles(){
          await fs.mkdirSync(pathNetworks+"/crypto-config"); 
       
          await fs.mkdirSync(pathNetworks+"/channel-artifacts");  
+
+         //await fsex.ensureDir(pathNetworks+"/src/github.com/chaincode");
          
          await fs.copyFileSync(baseFile, pathNetworks+"/base.yaml");
          await fs.copyFileSync(dockerComposeFile, pathNetworks+"/docker-compose.yaml");
@@ -231,27 +245,25 @@ module.exports = {
          await fs.copyFileSync(networkConfigFile, pathNetworks+"/network-config.yaml");
       
       };
-
-
+      //Altera os dados(REGEX) de um arquivo
       async function changeWriteFile(file, option, value){
          // Efetua a alteração nos arquivos
          const fileReader = await readFile(file); // Efetua a leitura do arquivo
          const fileReplace = await Promise.resolve (replaceFile(String(fileReader), option, String(value).toLocaleLowerCase())); // Efetua a troca do escrito
          await Promise.resolve(writeFile(file, fileReplace)); // Escreve no arquivo com os dados alterados
       }
-
+      //Adiciona os dados em um arquivo
       async function changeAppendFile(fileOrigin, fileDestiny, option, value){
          const fileReader = await readFile(fileOrigin);
          const fileReplace = await Promise.resolve (replaceFile(String(fileReader), option, value));
          await Promise.resolve(appendFile(fileDestiny, fileReplace));
       }
-
-
+      //Cria o arquivo base.yaml de uma network
       async function createBaseFile(){
          const base = path.join(pathNetworks, '/base.yaml');
          await changeWriteFile(base, 'networkname', networkName);    
       }
-
+      //Cria o arquivo docker-compose.yaml de uma network
       async function createDockerComposeFile(){
          const dockerCompose = path.join(pathNetworks, '/docker-compose.yaml');
     
@@ -284,7 +296,7 @@ module.exports = {
             portCA++;
             let keyOrg = crypto.randomBytes(6).toString('hex');
             await changeAppendFile(dockerComposeCAFile, dockerCompose, 'orgname', orgName);
-            await changeWriteFile(dockerCompose, 'keyorg', keyOrg);
+            await changeWriteFile(dockerCompose, 'keyorg', 'keyorg');
             await changeWriteFile(dockerCompose, 'portca', portCA);
             await changeWriteFile(dockerCompose, 'networkname', networkName);
 
@@ -294,7 +306,7 @@ module.exports = {
          await changeWriteFile(dockerCompose, 'portorderer', portOrderer);
          await changeWriteFile(dockerCompose, 'ordererpeer', ordererPeer);
       }
-
+      //Cria o arquivo crypto-config.yaml de uma network
       async function createCryptoConfig(){
          const cryptogen = path.join(pathNetworks, '/crypto-config.yaml');
 
@@ -307,7 +319,7 @@ module.exports = {
             } 
          }
       }
-
+      //Cria o arquivo configtx.yaml de uma network
       async function createConfigtx(){
          const configtx = path.join(pathNetworks, '/configtx.yaml');
 
@@ -318,7 +330,7 @@ module.exports = {
          for (let i = 0; i < orgName.length; i++) {
 
             const peers = numPeer[i];
-
+            shell.echo(orgName[i]);
             await changeAppendFile(peerConfigtxBase, configtx, 'orgname', orgName[i]);
             
          }
@@ -326,16 +338,24 @@ module.exports = {
          await changeAppendFile(aplicationConfigtxBase, configtx, 'OrganizationsOrgs', numOrg);
 
          await changeAppendFile(ordererConfigtxBase, configtx, 'portorderer', portOrderer);
-   
 
-         await changeAppendFile(ordererGenesisConfigtxBase, configtx, 'OrganizationsOrgs', numOrg);
-
-         await changeAppendFile(channelConfigtxBase, configtx, 'Channelname', nomeCanal);
-         await changeWriteFile(configtx, 'OrganizationsOrgs', numOrg);
-
-
+            await changeAppendFile(ordererGenesisConfigtxBase, configtx, 'OrganizationsOrgs', orgName[0]);
+            if (orgName.length > 1) {
+               for (let i = 1; i < orgName.length; i++) {
+                  await changeAppendFile(newLineOrdererGenesisConfigtxBase, configtx, 'OrganizationsOrgs', orgName[i]);           
+               }
+            }
+      
+            await changeAppendFile(channelConfigtxBase, configtx, 'Channelname', nomeCanal);
+            await changeWriteFile(configtx, 'OrganizationsOrgs', orgName[0]);
+            if (orgName.length > 1) {
+               for (let i = 1; i < orgName.length; i++) {
+                  await changeAppendFile(newLineChannelConfigtxBase
+            , configtx, 'OrganizationsOrgs', orgName[i]);           
+               }
+            }
       }
-
+      //Cria o arquivo network-config.yaml de uma network
       async function creatNetworkConfig(){
          const networkconfig = path.join(pathNetworks, '/network-config.yaml')
 
@@ -359,7 +379,7 @@ module.exports = {
             await changeAppendFile(organizationOrgMSPFile, networkconfig, 'orgname', orgName);
             await changeWriteFile(networkconfig, 'peersOrgs', numPeer);
             await changeAppendFile(organizationCAFile, networkconfig, 'orgname', orgName);
-            await changeWriteFile(networkconfig, 'keyorg', keyOrg);
+            await changeWriteFile(networkconfig, 'keyorg', 'keyorg');
          }
 
 
@@ -382,6 +402,31 @@ module.exports = {
          }
 
       }
+      //Adiciona as chaves das organizações nos arquivos .yaml
+      async function creatKeys(){
+         const dockerCompose = path.join(pathNetworks, '/docker-compose.yaml');
+         const networkconfig = path.join(pathNetworks, '/network-config.yaml')
+         let orgName = String(nomeOrg).split(' ');
+         for (let i = 0; i<orgName.length; i++) {
+            const value = await Promise.resolve(readDirectory(pathNetworks+'/crypto-config/peerOrganizations/'+orgName[i]+'.com/ca/'));
+            await changeWriteFile(dockerCompose, 'keyorg', value);
+            await changeWriteFile(networkconfig, 'keyorg', value);
+         }
+         
+      }
+
+      async function createCertificates(){
+         //Comandos para gerar os certificados da rede e de cada organização
+         shell.exec(bin +'cryptogen generate --config='+pathNetworks+'/crypto-config.yaml --output='+pathNetworks+'/crypto-config');
+         shell.cd(pathNetworks);
+         shell.exec(bin +'configtxgen -profile OrdererGenesis -outputBlock ./channel-artifacts/genesis.block');
+         shell.exec(bin +'configtxgen -profile '+nomeCanal+' -outputCreateChannelTx ./channel-artifacts/'+nomeCanal.toLowerCase()+'.tx -channelID '+nomeCanal.toLowerCase());
+         let orgName = String(nomeOrg).split(' ');
+         for (let i = 0; i < orgName.length; i++) {
+            shell.exec(bin +'configtxgen -profile '+nomeCanal+' -outputAnchorPeersUpdate ./channel-artifacts/'+orgName[i]+'MSPanchors.tx -channelID '+nomeCanal.toLowerCase()+' -asOrg '+orgName[i]+'MSP');
+         }
+         shell.cd("../..");
+      }
 
       async function make(){
          await generateFiles();
@@ -392,6 +437,11 @@ module.exports = {
          await createConfigtx();
          await creatNetworkConfig();
 
+         //FALTA CRIAR O CHAINCODE
+
+         await createCertificates();
+                  
+         await creatKeys();
 
       }
       
@@ -416,8 +466,6 @@ module.exports = {
          }
        })
        
-      
-
    },
 
    verifyNetworkName(req,res){
