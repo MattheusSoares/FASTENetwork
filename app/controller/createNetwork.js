@@ -43,14 +43,20 @@ module.exports = {
       const dockerComposePeerFile = path.resolve(__dirname, templateBase, 'docker-compose-peer.yaml');
       // Define os arquivos da pasta configtx
       const configtxFile = path.resolve(__dirname, templateConfigTx, 'configtx.yaml');
-      const aplicationConfigtxBase = path.resolve(__dirname, templateConfigTx, 'aplication-configtx-base.yaml');
-      const channelConfigtxBase = path.resolve(__dirname, templateConfigTx, 'channel-configtx-base.yaml');
-      const ordererGenesisConfigtxBase = path.resolve(__dirname, templateConfigTx, 'orderegenesis-configtx-base.yaml');
-      const ordererConfigtxBase = path.resolve(__dirname, templateConfigTx, 'orderer-configtx-base.yaml');
-      const ordererPeerConfigtxBase = path.resolve(__dirname, templateConfigTx, 'organizations.yaml');
-      const peerConfigtxBase = path.resolve(__dirname, templateConfigTx, 'peer-configtx-base.yaml');
-      const newLineChannelConfigtxBase = path.resolve(__dirname, templateConfigTx, 'new-line-channel-configtx-base.yaml');
-      const newLineOrdererGenesisConfigtxBase = path.resolve(__dirname, templateConfigTx, 'new-line-orderegenesis-configtx-base.yaml');
+
+      const configtxOrganizations = path.resolve(__dirname, templateConfigTx, 'organizations.yaml');
+      const configtxOrganizationOrgs = path.resolve(__dirname, templateConfigTx, 'organizations-orgs.yaml');
+      const configtxCapabilities = path.resolve(__dirname, templateConfigTx, 'capabilities.yaml');
+      const configtxApplication = path.resolve(__dirname, templateConfigTx, 'application.yaml');
+      const configtxOrderer = path.resolve(__dirname, templateConfigTx, 'orderer.yaml');
+      const configtxChannel = path.resolve(__dirname, templateConfigTx, 'channel.yaml');
+
+      const configtxProfileChannel = path.resolve(__dirname, templateConfigTx, 'profile-channel.yaml');
+      const configtxProfileChannelOrgNameLine = path.resolve(__dirname, templateConfigTx, 'profile-channel-orgNameLine.yaml');
+      const configtxProfileSampleOrgs = path.resolve(__dirname, templateConfigTx, 'profile-sampleOrgs.yaml');
+      const configtxProfileOrganizations = path.resolve(__dirname, templateConfigTx, 'profile-organizations.yaml');
+      const configtxProfileOrganizationsOrgNameLine = path.resolve(__dirname, templateConfigTx, 'profile-organizations-orgNameLine.yaml');
+      
       // Define os arquivos da pasta crypto
       const cryptogenFile = path.resolve(__dirname, templateCrypto, 'cryptogen.yaml');
       const peerCryptogenFile = path.resolve(__dirname, templateCrypto, 'peer-cryptogen.yaml');
@@ -322,38 +328,25 @@ module.exports = {
       //Cria o arquivo configtx.yaml de uma network
       async function createConfigtx(){
          const configtx = path.join(pathNetworks, '/configtx.yaml');
-
-         await changeAppendFile(ordererPeerConfigtxBase, configtx, 'orgname', '');
-
+         await changeAppendFile(configtxOrganizations, configtx, 'orgname', '');
          let orgName = String(nomeOrg).split(' ');
-
-         for (let i = 0; i < orgName.length; i++) {
-
-            const peers = numPeer[i];
-            shell.echo(orgName[i]);
-            await changeAppendFile(peerConfigtxBase, configtx, 'orgname', orgName[i]);
-            
+         for (let i = 0; i < orgName.length; i++) {      
+            await changeAppendFile(configtxOrganizationOrgs, configtx, 'orgname', orgName[i]);
          }
+         await changeAppendFile(configtxCapabilities, configtx, 'OrganizationsOrgs', numOrg);
+         await changeAppendFile(configtxApplication, configtx, 'portorderer', portOrderer);
+         await changeAppendFile(configtxOrderer, configtx, 'OrganizationsOrgs', orgName[0]);
+         await changeAppendFile(configtxChannel, configtx, 'Channelname', nomeCanal);
 
-         await changeAppendFile(aplicationConfigtxBase, configtx, 'OrganizationsOrgs', numOrg);
-
-         await changeAppendFile(ordererConfigtxBase, configtx, 'portorderer', portOrderer);
-
-            await changeAppendFile(ordererGenesisConfigtxBase, configtx, 'OrganizationsOrgs', orgName[0]);
-            if (orgName.length > 1) {
-               for (let i = 1; i < orgName.length; i++) {
-                  await changeAppendFile(newLineOrdererGenesisConfigtxBase, configtx, 'OrganizationsOrgs', orgName[i].toLowerCase());           
-               }
-            }
-      
-            await changeAppendFile(channelConfigtxBase, configtx, 'Channelname', nomeCanal);
-            await changeWriteFile(configtx, 'OrganizationsOrgs', orgName[0]);
-            if (orgName.length > 1) {
-               for (let i = 1; i < orgName.length; i++) {
-                  await changeAppendFile(newLineChannelConfigtxBase
-            , configtx, 'OrganizationsOrgs', orgName[i].toLowerCase());           
-               }
-            }
+         await changeAppendFile(configtxProfileChannel, configtx, 'Channelname', nomeCanal);
+         for (let i = 0; i < orgName.length; i++) {      
+            await changeAppendFile(configtxProfileChannelOrgNameLine, configtx, 'orgname', orgName[i]);
+         }
+         await changeAppendFile(configtxProfileSampleOrgs, configtx, 'Channelname', nomeCanal);
+         await changeAppendFile(configtxProfileOrganizations, configtx, 'Channelname', nomeCanal);
+         for (let i = 0; i < orgName.length; i++) {      
+            await changeAppendFile(configtxProfileOrganizationsOrgNameLine, configtx, 'orgname', orgName[i]);
+         } 
       }
       //Cria o arquivo network-config.yaml de uma network
       async function creatNetworkConfig(){
@@ -418,14 +411,20 @@ module.exports = {
       async function createCertificates(){
          //Comandos para gerar os certificados da rede e de cada organização
          shell.exec(bin +'cryptogen generate --config='+pathNetworks+'/crypto-config.yaml --output='+pathNetworks+'/crypto-config');
+
          shell.cd(pathNetworks);
-         shell.exec(bin +'configtxgen -profile OrdererGenesis -outputBlock ./channel-artifacts/genesis.block');
-         shell.exec(bin +'configtxgen -profile '+nomeCanal+' -outputCreateChannelTx ./channel-artifacts/'+nomeCanal.toLowerCase()+'.tx -channelID '+nomeCanal.toLowerCase());
+
+         shell.exec( bin + 'configtxgen -profile SampleOrgs -outputBlock ./channel-artifacts/genesis.block -channelID ' + nomeCanal );
+
+         shell.exec( bin + 'configtxgen -profile ' + nomeCanal + ' -outputCreateChannelTx ./channel-artifacts/channel.tx -channelID ' + nomeCanal  );
+
          let orgName = String(nomeOrg).split(' ');
-         for (let i = 0; i < orgName.length; i++) {
-            shell.exec(bin +'configtxgen -profile '+nomeCanal+' -outputAnchorPeersUpdate ./channel-artifacts/'+orgName[i]+'MSPanchors.tx -channelID '+nomeCanal.toLowerCase()+' -asOrg '+orgName[i]+'MSP');
+
+         for (let i = 0; i<orgName.length; i++) {
+            shell.exec( bin + 'configtxgen -profile ' + nomeCanal + ' -outputAnchorPeersUpdate ./channel-artifacts/' + orgName[i] + 'MSPanchors.tx -channelID ' + nomeCanal + ' -asOrg ' + orgName[i] + 'MSP' );
          }
-         shell.cd("../..");
+
+         shell.cd('../..');
       }
 
       async function make(){
