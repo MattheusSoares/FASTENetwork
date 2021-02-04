@@ -1,7 +1,0 @@
-    
-    Channelname:
-        Consortium: SampleConsortium
-        Application:
-            <<: *ApplicationDefaults
-            Organizations:
-                - *OrganizationsOrgs

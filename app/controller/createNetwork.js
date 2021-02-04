@@ -47,7 +47,7 @@ module.exports = {
       const channelConfigtxBase = path.resolve(__dirname, templateConfigTx, 'channel-configtx-base.yaml');
       const ordererGenesisConfigtxBase = path.resolve(__dirname, templateConfigTx, 'orderegenesis-configtx-base.yaml');
       const ordererConfigtxBase = path.resolve(__dirname, templateConfigTx, 'orderer-configtx-base.yaml');
-      const ordererPeerConfigtxBase = path.resolve(__dirname, templateConfigTx, 'ordererpeer-configtx-base.yaml');
+      const ordererPeerConfigtxBase = path.resolve(__dirname, templateConfigTx, 'organizations.yaml');
       const peerConfigtxBase = path.resolve(__dirname, templateConfigTx, 'peer-configtx-base.yaml');
       const newLineChannelConfigtxBase = path.resolve(__dirname, templateConfigTx, 'new-line-channel-configtx-base.yaml');
       const newLineOrdererGenesisConfigtxBase = path.resolve(__dirname, templateConfigTx, 'new-line-orderegenesis-configtx-base.yaml');
@@ -342,7 +342,7 @@ module.exports = {
             await changeAppendFile(ordererGenesisConfigtxBase, configtx, 'OrganizationsOrgs', orgName[0]);
             if (orgName.length > 1) {
                for (let i = 1; i < orgName.length; i++) {
-                  await changeAppendFile(newLineOrdererGenesisConfigtxBase, configtx, 'OrganizationsOrgs', orgName[i]);           
+                  await changeAppendFile(newLineOrdererGenesisConfigtxBase, configtx, 'OrganizationsOrgs', orgName[i].toLowerCase());           
                }
             }
       
@@ -351,7 +351,7 @@ module.exports = {
             if (orgName.length > 1) {
                for (let i = 1; i < orgName.length; i++) {
                   await changeAppendFile(newLineChannelConfigtxBase
-            , configtx, 'OrganizationsOrgs', orgName[i]);           
+            , configtx, 'OrganizationsOrgs', orgName[i].toLowerCase());           
                }
             }
       }
