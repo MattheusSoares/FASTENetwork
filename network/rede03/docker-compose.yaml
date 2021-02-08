@@ -1,0 +1,270 @@
+#
+# Copyright IBM Corp. All Rights Reserved.
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+version: '2'
+
+networks:
+  rede03:
+
+services:
+    
+    
+    peer0.org.com:
+        container_name: peer0.org.com
+        extends:
+          file:   base.yaml
+          service: peer-base
+        dns_search: .
+        environment:   
+          - GODEBUG=netdns=go      
+          - CORE_PEER_ID=peer0.org.com
+          - CORE_PEER_LOCALMSPID=orgMSP
+          - CORE_PEER_ADDRESS=peer0.org.com:7051
+          - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.org.com:7051     
+          - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.org.com:7051
+          - CORE_PEER_LISTENADDRESS=0.0.0.0:7051
+          
+          
+          
+          - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
+          - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=couchdb0:5984
+          # The CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME and CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD
+          # provide the credentials for ledger to connect to CouchDB.  The username and password must
+          # match the username and password set for the associated CouchDB.
+          - CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=
+          - CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=
+        ports:
+          - 7051:7051
+          - 7080:7053
+        volumes:
+          - ./crypto-config/peerOrganizations/org.com/peers/peer0.org.com/:/etc/hyperledger/crypto/peer          
+        depends_on:
+          - orderer.example.com
+          - couchdb0
+        networks:
+          - rede03
+
+    couchdb0:
+        container_name: couchdb0
+        image: hyperledger/fabric-couchdb
+        # Populate the COUCHDB_USER and COUCHDB_PASSWORD to set an admin user and password
+        # for CouchDB.  This will prevent CouchDB from operating in an "Admin Party" mode.
+        environment:
+          - COUCHDB_USER=
+          - COUCHDB_PASSWORD=
+        ports:
+          - 5984:5984
+        networks:
+          - rede03    
+    
+    peer1.org.com:
+        container_name: peer1.org.com
+        extends:
+          file:   base.yaml
+          service: peer-base
+        dns_search: .
+        environment:   
+          - GODEBUG=netdns=go      
+          - CORE_PEER_ID=peer1.org.com
+          - CORE_PEER_LOCALMSPID=orgMSP
+          - CORE_PEER_ADDRESS=peer1.org.com:7051
+          - CORE_PEER_GOSSIP_BOOTSTRAP=peer1.org.com:7051     
+          - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer1.org.com:7051
+          - CORE_PEER_LISTENADDRESS=0.0.0.0:7051
+          
+          
+          
+          - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
+          - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=couchdb1:5985
+          # The CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME and CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD
+          # provide the credentials for ledger to connect to CouchDB.  The username and password must
+          # match the username and password set for the associated CouchDB.
+          - CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=
+          - CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=
+        ports:
+          - 8051:7051
+          - 7081:7053
+        volumes:
+          - ./crypto-config/peerOrganizations/org.com/peers/peer1.org.com/:/etc/hyperledger/crypto/peer          
+        depends_on:
+          - orderer.example.com
+          - couchdb1
+        networks:
+          - rede03
+
+    couchdb1:
+        container_name: couchdb1
+        image: hyperledger/fabric-couchdb
+        # Populate the COUCHDB_USER and COUCHDB_PASSWORD to set an admin user and password
+        # for CouchDB.  This will prevent CouchDB from operating in an "Admin Party" mode.
+        environment:
+          - COUCHDB_USER=
+          - COUCHDB_PASSWORD=
+        ports:
+          - 5985:5985
+        networks:
+          - rede03
+
+    ca.org.com:
+        image: hyperledger/fabric-ca
+        environment:
+          - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
+          - FABRIC_CA_SERVER_CA_NAME=ca-org
+          - FABRIC_CA_SERVER_CA_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.org.com.org.com-cert.pem
+          - FABRIC_CA_SERVER_CA_KEYFILE=/etc/hyperledger/fabric-ca-server-config/keyorg
+          - FABRIC_CA_SERVER_TLS_ENABLED=true
+          - FABRIC_CA_SERVER_TLS_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.org.com.org.com-cert.pem
+          - FABRIC_CA_SERVER_TLS_KEYFILE=/etc/hyperledger/fabric-ca-server-config/keyorg
+        ports:
+          - "9055:7054"
+        command: sh -c 'fabric-ca-server start -b admin:adminpw -d'
+        volumes:
+          - ./crypto-config/peerOrganizations/org.com/ca/:/etc/hyperledger/fabric-ca-server-config
+        container_name: ca.org.com
+        networks:
+          - rede03
+    
+    
+    peer0.safe.com:
+        container_name: peer0.safe.com
+        extends:
+          file:   base.yaml
+          service: peer-base
+        dns_search: .
+        environment:   
+          - GODEBUG=netdns=go      
+          - CORE_PEER_ID=peer0.safe.com
+          - CORE_PEER_LOCALMSPID=safeMSP
+          - CORE_PEER_ADDRESS=peer0.safe.com:7051
+          - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.safe.com:7051     
+          - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.safe.com:7051
+          - CORE_PEER_LISTENADDRESS=0.0.0.0:7051
+          
+          
+          
+          - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
+          - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=couchdb2:5986
+          # The CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME and CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD
+          # provide the credentials for ledger to connect to CouchDB.  The username and password must
+          # match the username and password set for the associated CouchDB.
+          - CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=
+          - CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=
+        ports:
+          - 9051:7051
+          - 7082:7053
+        volumes:
+          - ./crypto-config/peerOrganizations/safe.com/peers/peer0.safe.com/:/etc/hyperledger/crypto/peer          
+        depends_on:
+          - orderer.example.com
+          - couchdb2
+        networks:
+          - rede03
+
+    couchdb2:
+        container_name: couchdb2
+        image: hyperledger/fabric-couchdb
+        # Populate the COUCHDB_USER and COUCHDB_PASSWORD to set an admin user and password
+        # for CouchDB.  This will prevent CouchDB from operating in an "Admin Party" mode.
+        environment:
+          - COUCHDB_USER=
+          - COUCHDB_PASSWORD=
+        ports:
+          - 5986:5986
+        networks:
+          - rede03    
+    
+    peer1.safe.com:
+        container_name: peer1.safe.com
+        extends:
+          file:   base.yaml
+          service: peer-base
+        dns_search: .
+        environment:   
+          - GODEBUG=netdns=go      
+          - CORE_PEER_ID=peer1.safe.com
+          - CORE_PEER_LOCALMSPID=safeMSP
+          - CORE_PEER_ADDRESS=peer1.safe.com:7051
+          - CORE_PEER_GOSSIP_BOOTSTRAP=peer1.safe.com:7051     
+          - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer1.safe.com:7051
+          - CORE_PEER_LISTENADDRESS=0.0.0.0:7051
+          
+          
+          
+          - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
+          - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=couchdb3:5987
+          # The CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME and CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD
+          # provide the credentials for ledger to connect to CouchDB.  The username and password must
+          # match the username and password set for the associated CouchDB.
+          - CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=
+          - CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=
+        ports:
+          - 10051:7051
+          - 7083:7053
+        volumes:
+          - ./crypto-config/peerOrganizations/safe.com/peers/peer1.safe.com/:/etc/hyperledger/crypto/peer          
+        depends_on:
+          - orderer.example.com
+          - couchdb3
+        networks:
+          - rede03
+
+    couchdb3:
+        container_name: couchdb3
+        image: hyperledger/fabric-couchdb
+        # Populate the COUCHDB_USER and COUCHDB_PASSWORD to set an admin user and password
+        # for CouchDB.  This will prevent CouchDB from operating in an "Admin Party" mode.
+        environment:
+          - COUCHDB_USER=
+          - COUCHDB_PASSWORD=
+        ports:
+          - 5987:5987
+        networks:
+          - rede03
+
+    ca.safe.com:
+        image: hyperledger/fabric-ca
+        environment:
+          - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
+          - FABRIC_CA_SERVER_CA_NAME=ca-safe
+          - FABRIC_CA_SERVER_CA_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.safe.com.safe.com-cert.pem
+          - FABRIC_CA_SERVER_CA_KEYFILE=/etc/hyperledger/fabric-ca-server-config/keyorg
+          - FABRIC_CA_SERVER_TLS_ENABLED=true
+          - FABRIC_CA_SERVER_TLS_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.safe.com.safe.com-cert.pem
+          - FABRIC_CA_SERVER_TLS_KEYFILE=/etc/hyperledger/fabric-ca-server-config/keyorg
+        ports:
+          - "9056:7054"
+        command: sh -c 'fabric-ca-server start -b admin:adminpw -d'
+        volumes:
+          - ./crypto-config/peerOrganizations/safe.com/ca/:/etc/hyperledger/fabric-ca-server-config
+        container_name: ca.safe.com
+        networks:
+          - rede03
+
+
+    orderer.example.com:
+        container_name: orderer.example.com
+        image: hyperledger/fabric-orderer
+        environment:
+          - FABRIC_LOGGING_SPEC=debug
+          - ORDERER_GENERAL_LOGLEVEL=debug
+          - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
+          - ORDERER_GENERAL_GENESISMETHOD=file
+          - ORDERER_GENERAL_GENESISFILE=/etc/hyperledger/configtx/genesis.block
+          - ORDERER_GENERAL_LOCALMSPID=OrdererMSP
+          - ORDERER_GENERAL_LOCALMSPDIR=/etc/hyperledger/msp/orderer/msp
+          - ORDERER_GENERAL_TLS_ENABLED=true
+          - ORDERER_GENERAL_TLS_PRIVATEKEY=/etc/hyperledger/msp/orderer/tls/server.key
+          - ORDERER_GENERAL_TLS_CERTIFICATE=/etc/hyperledger/msp/orderer/tls/server.crt
+          - ORDERER_GENERAL_TLS_ROOTCAS=[/etc/hyperledger/msp/orderer/tls/ca.crt, ordererca]
+        working_dir: /opt/gopath/src/github.com/hyperledger/fabric/orderer
+        command: orderer
+        ports:
+          - 7050:7050
+        volumes:
+            - ./channel-artifacts/:/etc/hyperledger/configtx
+            - ./crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/:/etc/hyperledger/msp/orderer     
+       
+        networks:
+          - rede03

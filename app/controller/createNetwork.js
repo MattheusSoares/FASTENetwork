@@ -7,7 +7,12 @@ const crypto = require('crypto');
 
 module.exports = {
    async creatAndSave(req,res) {
-      const {nomeRede, descricaoRede, nomeOrg, numPeer, numOrg, nomeCanal} = req.body;
+      let {nomeRede, descricaoRede, nomeOrg, numPeer, numOrg, nomeCanal} = req.body;
+
+      nomeRede = String(nomeRede).toLocaleLowerCase();
+      nomeCanal = String(nomeCanal).toLocaleLowerCase();
+      nomeOrg = String(nomeOrg).toLocaleLowerCase();
+      descricaoRede = String(descricaoRede).toLocaleLowerCase();
 
       const networkName = nomeRede.split(" ").join("_");
       
@@ -261,7 +266,7 @@ module.exports = {
       //Adiciona os dados em um arquivo
       async function changeAppendFile(fileOrigin, fileDestiny, option, value){
          const fileReader = await readFile(fileOrigin);
-         const fileReplace = await Promise.resolve (replaceFile(String(fileReader), option, value));
+         const fileReplace = await Promise.resolve (replaceFile(String(fileReader), option, String(value).toLocaleLowerCase()));
          await Promise.resolve(appendFile(fileDestiny, fileReplace));
       }
       //Cria o arquivo base.yaml de uma network
@@ -301,7 +306,6 @@ module.exports = {
             }
 
             portCA++;
-            let keyOrg = crypto.randomBytes(6).toString('hex');
             await changeAppendFile(dockerComposeCAFile, dockerCompose, 'orgname', orgName[i]);
             await changeWriteFile(dockerCompose, 'keyorg', 'keyorg');
             await changeWriteFile(dockerCompose, 'portca', portCA);
@@ -309,7 +313,7 @@ module.exports = {
 
          } 
 
-         await changeAppendFile(dockerComposeOrdererFile, dockerCompose, 'networkname', networkName);
+         await changeAppendFile(dockerComposeOrdererFile, dockerCompose, 'networkname', networkName.toLowerCase());
          await changeWriteFile(dockerCompose, 'portorderer', portOrderer);
          await changeWriteFile(dockerCompose, 'ordererpeer', ordererPeer);
       }
@@ -414,10 +418,11 @@ module.exports = {
          shell.exec(bin +'cryptogen generate --config='+pathNetworks+'/crypto-config.yaml --output='+pathNetworks+'/crypto-config');
 
          shell.cd(pathNetworks);
+         
 
          shell.exec( bin + 'configtxgen -profile SampleOrgs -outputBlock ./channel-artifacts/genesis.block -channelID ' + nomeCanal );
 
-         shell.exec( bin + 'configtxgen -profile ' + nomeCanal + ' -outputCreateChannelTx ./channel-artifacts/channel.tx -channelID ' + nomeCanal  );
+         shell.exec( bin + 'configtxgen -profile ' + nomeCanal + ' -outputCreateChannelTx ./channel-artifacts/channel.tx -channelID ' + String(nomeCanal).toLocaleLowerCase()  );
 
          let orgName = String(nomeOrg).split(' ');
 
