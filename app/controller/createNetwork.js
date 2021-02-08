@@ -278,7 +278,7 @@ module.exports = {
          let orgName = String(nomeOrg).split(' ');
          
          for (let i = 0; i < orgName.length; i++) {
-            const peer = numPeer[i];
+            const peer = numPeer;
 
             for (let j = 0; j < peer; j++) {
                await changeAppendFile(dockerComposePeerFile, dockerCompose, 'orgname', orgName[i]);
@@ -287,6 +287,7 @@ module.exports = {
                await changeWriteFile(dockerCompose, 'portcouch', portCouch);
                await changeWriteFile(dockerCompose, 'portpeer2', portPeer2);
                await changeWriteFile(dockerCompose, 'networkname', networkName);
+               await changeWriteFile(dockerCompose, 'portnumber', portNumber);
 
                await changeAppendFile(dockerComposeCouchDBFile, dockerCompose, 'couchdbname', couchdbNumber);
                await changeWriteFile(dockerCompose, 'couchdbname', couchdbNumber);
@@ -301,7 +302,7 @@ module.exports = {
 
             portCA++;
             let keyOrg = crypto.randomBytes(6).toString('hex');
-            await changeAppendFile(dockerComposeCAFile, dockerCompose, 'orgname', orgName);
+            await changeAppendFile(dockerComposeCAFile, dockerCompose, 'orgname', orgName[i]);
             await changeWriteFile(dockerCompose, 'keyorg', 'keyorg');
             await changeWriteFile(dockerCompose, 'portca', portCA);
             await changeWriteFile(dockerCompose, 'networkname', networkName);
