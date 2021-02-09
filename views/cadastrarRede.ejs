@@ -48,13 +48,49 @@
               <div class="row">
                 <div class="col-lg-12">
                   <h6>Organizações</h6>
+                </div>
+              </div>
+
+                <!--
                   <div class="form-group">
                     <label for="labelOrganizacaoRede">Label das Organizações</label>
                     <input type="text" class="form-control" id="nomeOrg" name="nomeOrg"
                       placeholder="Digite o nome do para label das organizações" required>
                   </div>
+                -->
+
+              <div class="row">
+
+                  <div class="col-md-5">
+                    <div class="form-group">
+                      <input type="text" class="form-control" id="nomeOrg" name="nomeOrg1"
+                    placeholder="Digite o nome da organização" required>
+
+                    </div>
+                  </div>
+                  <div class="col-md-5">
+                    <div class="form-group">
+                      <input type="number" class="form-control" id="numPeer" name="numPeer1"
+                      placeholder="Digite o número de nós da organização" required>
+
+                    </div>
+                  </div>
+                <div class="col-md-2">
+                  <a class="btn btn-danger" href="#" title="Remover Organização"><i class="ti-close"></i></a>
+
                 </div>
               </div>
+
+              <div id="orgList">
+              </div>
+
+              <div class="row">
+                <div class="col-md-12">
+                  <input type="button" id="addOrg" class="btn btn-primary" value="Adicionar Organização">
+
+                </div>
+              </div>
+<!--
 
               <div class="row">
                 <div class="col-lg-6">
@@ -76,6 +112,7 @@
                   </div>
                 </div>
               </div>
+-->
 
               <div class="row">
                 <div class="col-lg-12">
@@ -109,6 +146,8 @@
 </div>
 
 <%- include('importScript'); -%>
+
+<script src="/js/saveNetworkScript.js"></script>
 
 </body>
 

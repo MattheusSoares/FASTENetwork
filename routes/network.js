@@ -7,7 +7,9 @@ const RedeDatabase = require('../app/database/models/RedeModel')
 
 //Insere os dados na database e Network
 router.post('/routeCreateNetwork', async (req, res) => {
-    const verify = await createNetwork.verifyNetworkName(req,res);
+    console.log(req.body)
+
+    /*const verify = await createNetwork.verifyNetworkName(req,res);
     if (String(verify) === "exist") {
         res.redirect('/result?msg=existFile');
     } else {
@@ -31,7 +33,7 @@ router.post('/routeCreateNetwork', async (req, res) => {
         } else {
             res.redirect('/result?msg=error');
         }
-    }
+    }*/
 });
 
 router.get('/routeGetNetwork', async (req, res)=>{
