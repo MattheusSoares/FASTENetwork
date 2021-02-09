@@ -9,11 +9,6 @@ module.exports = {
    async creatAndSave(req,res) {
       let {nomeRede, descricaoRede, nomeOrg, numPeer, numOrg, nomeCanal} = req.body;
 
-      nomeRede = String(nomeRede).toLocaleLowerCase();
-      nomeCanal = String(nomeCanal).toLocaleLowerCase();
-      nomeOrg = String(nomeOrg).toLocaleLowerCase();
-      descricaoRede = String(descricaoRede).toLocaleLowerCase();
-
       const networkName = nomeRede.split(" ").join("_");
       
       let portNumber = 7051;
@@ -282,11 +277,11 @@ module.exports = {
 
          let orgName = String(nomeOrg).split(' ');
          
-         for (let i = 0; i < orgName.length; i++) {
-            const peer = numPeer;
+         for (let i = 0; i < nomeOrg.length; i++) {
+            const peer = numPeer[i];
 
             for (let j = 0; j < peer; j++) {
-               await changeAppendFile(dockerComposePeerFile, dockerCompose, 'orgname', orgName[i]);
+               await changeAppendFile(dockerComposePeerFile, dockerCompose, 'orgname', nomeOrg[i]);
                await changeWriteFile(dockerCompose, 'peernumber', j);
                await changeWriteFile(dockerCompose, 'couchdbname', couchdbNumber);
                await changeWriteFile(dockerCompose, 'portcouch', portCouch);
@@ -306,14 +301,14 @@ module.exports = {
             }
 
             portCA++;
-            await changeAppendFile(dockerComposeCAFile, dockerCompose, 'orgname', orgName[i]);
+            await changeAppendFile(dockerComposeCAFile, dockerCompose, 'orgname', nomeOrg[i]);
             await changeWriteFile(dockerCompose, 'keyorg', 'keyorg');
             await changeWriteFile(dockerCompose, 'portca', portCA);
             await changeWriteFile(dockerCompose, 'networkname', networkName);
 
          } 
 
-         await changeAppendFile(dockerComposeOrdererFile, dockerCompose, 'networkname', networkName.toLowerCase());
+         await changeAppendFile(dockerComposeOrdererFile, dockerCompose, 'networkname', networkName);
          await changeWriteFile(dockerCompose, 'portorderer', portOrderer);
          await changeWriteFile(dockerCompose, 'ordererpeer', ordererPeer);
       }
@@ -323,9 +318,9 @@ module.exports = {
 
          let orgName = String(nomeOrg).split(' ');
 
-         for (let i = 0; i<orgName.length; i++) {
+         for (let i = 0; i<nomeOrg.length; i++) {
             for (let j = 0; j < numPeer.length; j++ ) {
-               await changeAppendFile(peerCryptogenFile, cryptogen, 'orgname', orgName[i]);
+               await changeAppendFile(peerCryptogenFile, cryptogen, 'orgname', nomeOrg[i]);
                await changeWriteFile(cryptogen, 'countpeer', numPeer[j]);
             } 
          }
@@ -334,23 +329,23 @@ module.exports = {
       async function createConfigtx(){
          const configtx = path.join(pathNetworks, '/configtx.yaml');
          await changeAppendFile(configtxOrganizations, configtx, 'orgname', '');
-         let orgName = String(nomeOrg).split(' ');
-         for (let i = 0; i < orgName.length; i++) {      
-            await changeAppendFile(configtxOrganizationOrgs, configtx, 'orgname', orgName[i]);
+
+         for (let i = 0; i < nomeOrg.length; i++) {      
+            await changeAppendFile(configtxOrganizationOrgs, configtx, 'orgname', nomeOrg[i]);
          }
-         await changeAppendFile(configtxCapabilities, configtx, 'OrganizationsOrgs', numOrg);
+         await changeAppendFile(configtxCapabilities, configtx, 'OrganizationsOrgs', numOrg);//Verificar a necessidade
          await changeAppendFile(configtxApplication, configtx, 'portorderer', portOrderer);
-         await changeAppendFile(configtxOrderer, configtx, 'OrganizationsOrgs', orgName[0]);
+         await changeAppendFile(configtxOrderer, configtx, 'OrganizationsOrgs', 'nomeOrg[i]');
          await changeAppendFile(configtxChannel, configtx, 'Channelname', nomeCanal);
 
          await changeAppendFile(configtxProfileChannel, configtx, 'Channelname', nomeCanal);
-         for (let i = 0; i < orgName.length; i++) {      
-            await changeAppendFile(configtxProfileChannelOrgNameLine, configtx, 'orgname', orgName[i]);
+         for (let i = 0; i < nomeOrg.length; i++) {      
+            await changeAppendFile(configtxProfileChannelOrgNameLine, configtx, 'orgname', nomeOrg[i]);
          }
          await changeAppendFile(configtxProfileSampleOrgs, configtx, 'Channelname', nomeCanal);
          await changeAppendFile(configtxProfileOrganizations, configtx, 'Channelname', nomeCanal);
-         for (let i = 0; i < orgName.length; i++) {      
-            await changeAppendFile(configtxProfileOrganizationsOrgNameLine, configtx, 'orgname', orgName[i]);
+         for (let i = 0; i < nomeOrg.length; i++) {      
+            await changeAppendFile(configtxProfileOrganizationsOrgNameLine, configtx, 'orgname', nomeOrg[i]);
          } 
       }
       //Cria o arquivo network-config.yaml de uma network
@@ -362,51 +357,58 @@ module.exports = {
 
          await changeAppendFile(channelFile, networkconfig, 'Channelname', nomeCanal);
 
-         let orgName = String(nomeOrg).split(' ');
-
-         for (let i = 0; i<orgName.length; i++) {
-            await changeAppendFile(peerChannelFile, networkconfig, 'orgname', orgName[i]);
-         }
-
-         await changeWriteFile(networkconfig, 'peernumber', numPeer);
+         for (let i = 0; i<nomeOrg.length; i++) {
+            await changeAppendFile(peerChannelFile, networkconfig, 'orgname', nomeOrg[i]);
+            await changeWriteFile(networkconfig, 'peernumber', numPeer[i]);
+         }         
 
          await changeAppendFile(chaincodeFile, networkconfig, 'orgname', '');
 
-         for (let i = 0; i<orgName.length; i++) {
-            let keyOrg = crypto.randomBytes(6).toString('hex');
-            await changeAppendFile(organizationOrgMSPFile, networkconfig, 'orgname', orgName);
-            await changeWriteFile(networkconfig, 'peersOrgs', numPeer);
-            await changeAppendFile(organizationCAFile, networkconfig, 'orgname', orgName);
+         for (let i = 0; i<nomeOrg.length; i++) {
+            await changeAppendFile(organizationOrgMSPFile, networkconfig, 'orgname', nomeOrg[i]);
+            await changeWriteFile(networkconfig, 'peersOrgs', numPeer[i]);
+            await changeAppendFile(organizationCAFile, networkconfig, 'orgname', nomeOrg[i]);
             await changeWriteFile(networkconfig, 'keyorg', 'keyorg');
          }
 
 
-         for (let i = 0; i<orgName.length; i++) {
+         for (let i = 0; i<nomeOrg.length; i++) {
             await changeAppendFile(peerFile, networkconfig, 'portpeer', portPeer2++);
-            await changeWriteFile(networkconfig, 'orgname', orgName[i]);
-            await changeWriteFile(networkconfig, 'peernumber', numPeer);
+            await changeWriteFile(networkconfig, 'orgname', nomeOrg[i]);
+            await changeWriteFile(networkconfig, 'peernumber', numPeer[i]);
          }
 
          await changeAppendFile(certificateAuthoritiesFile, networkconfig, 'orgname', '');
-         for (let i = 0; i<orgName.length; i++) {
+         for (let i = 0; i<nomeOrg.length; i++) {
             await changeAppendFile(caFile, networkconfig, 'portca', portcaNetworkConfig);
-            await changeWriteFile(networkconfig, 'orgname', orgName[i]);
+            await changeWriteFile(networkconfig, 'orgname', nomeOrg[i]);
          }
          
-         for (let i = 0; i<orgName.length; i++) {
+         for (let i = 0; i<nomeOrg.length; i++) {
             await changeAppendFile(orgFile, networkconfig, 'networkname', networkName);
-            await changeWriteFile(networkconfig, 'orgname', orgName[i]);
+            await changeWriteFile(networkconfig, 'orgname', nomeOrg[i]);
             await changeWriteFile(networkconfig, 'description', descricaoRede);
          }
 
+         for (let i = 0; i<nomeOrg.length; i++) {
+            await fs.copyFileSync(orgFile, pathNetworks+"/"+nomeOrg[i]+".yaml");
+
+            const orgNameFile = path.resolve(__dirname, pathNetworks+"/"+nomeOrg[i]+".yaml");
+
+            await changeWriteFile(orgNameFile, 'orgname', nomeOrg[i]);
+            await changeWriteFile(orgNameFile, 'orgname', nomeRede);
+            await changeWriteFile(orgNameFile, 'orgname', descricaoRede);
+            await changeWriteFile(orgNameFile, 'orgname', nomeOrg[i]);
+            await changeWriteFile(orgNameFile, 'orgname', nomeOrg[i]);
+         }
       }
       //Adiciona as chaves das organizações nos arquivos .yaml
       async function creatKeys(){
          const dockerCompose = path.join(pathNetworks, '/docker-compose.yaml');
          const networkconfig = path.join(pathNetworks, '/network-config.yaml')
-         let orgName = String(nomeOrg).split(' ');
-         for (let i = 0; i<orgName.length; i++) {
-            const value = await Promise.resolve(readDirectory(pathNetworks+'/crypto-config/peerOrganizations/'+orgName[i]+'.com/ca/'));
+
+         for (let i = 0; i<nomeOrg.length; i++) {
+            const value = await Promise.resolve(readDirectory(pathNetworks+'/crypto-config/peerOrganizations/'+nomeOrg[i]+'.com/ca/'));
             await changeWriteFile(dockerCompose, 'keyorg', value);
             await changeWriteFile(networkconfig, 'keyorg', value);
          }
@@ -426,8 +428,8 @@ module.exports = {
 
          let orgName = String(nomeOrg).split(' ');
 
-         for (let i = 0; i<orgName.length; i++) {
-            shell.exec( bin + 'configtxgen -profile ' + nomeCanal + ' -outputAnchorPeersUpdate ./channel-artifacts/' + orgName[i] + 'MSPanchors.tx -channelID ' + nomeCanal + ' -asOrg ' + orgName[i] + 'MSP' );
+         for (let i = 0; i<nomeOrg.length; i++) {
+            shell.exec( bin + 'configtxgen -profile ' + nomeCanal + ' -outputAnchorPeersUpdate ./channel-artifacts/' + nomeOrg[i] + 'MSPanchors.tx -channelID ' + nomeCanal + ' -asOrg ' + nomeOrg[i] + 'MSP' );
          }
 
          shell.cd('../..');

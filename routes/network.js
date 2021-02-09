@@ -8,15 +8,17 @@ const RedeDatabase = require('../app/database/models/RedeModel')
 //Insere os dados na database e Network
 router.post('/routeCreateNetwork', async (req, res) => {
     console.log(req.body)
-
-    /*const verify = await createNetwork.verifyNetworkName(req,res);
+    /* DESCOMENTAR */
+    const verify = await createNetwork.verifyNetworkName(req,res);
     if (String(verify) === "exist") {
         res.redirect('/result?msg=existFile');
     } else {
         if (req.body != null) {
             createNetwork.creatAndSave(req, res);
+            /* Descomentar 
+            const {nomeRede, descricaoRede, nomeOrg, numPeer, nomeCanal} = req.body
 
-            const {nomeRede, descricaoRede, nomeOrg, numOrg, numPeer, nomeCanal} = req.body
+            const numOrg = nomeOrg.length;
 
             const redeDatabase = new RedeDatabase({
                 nomeRede: nomeRede,
@@ -28,12 +30,13 @@ router.post('/routeCreateNetwork', async (req, res) => {
             })
     
             const newredeDatabase = await redeDatabase.save()
+            */
 
             res.redirect('/result?msg=success');
         } else {
             res.redirect('/result?msg=error');
         }
-    }*/
+    }
 });
 
 router.get('/routeGetNetwork', async (req, res)=>{
@@ -55,7 +58,7 @@ router.post('/routeDeleteNetwork', async (req, res)=>{
 
     RedeDatabase.findByIdAndDelete(idRede, function (err) {
         if (err) res.redirect('/resultDelete?msg=error');
-            //res.redirect('/resultDelete?msg=success');     
+            res.redirect('/resultDelete?msg=success');     
     });
     
 });
