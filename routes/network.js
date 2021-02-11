@@ -8,30 +8,38 @@ const RedeDatabase = require('../app/database/models/RedeModel')
 //Insere os dados na database e Network
 router.post('/routeCreateNetwork', async (req, res) => {
     console.log(req.body)
-    /* DESCOMENTAR */
+    
     const verify = await createNetwork.verifyNetworkName(req,res);
     if (String(verify) === "exist") {
         res.redirect('/result?msg=existFile');
     } else {
         if (req.body != null) {
             createNetwork.creatAndSave(req, res);
-            /* Descomentar 
             const {nomeRede, descricaoRede, nomeOrg, numPeer, nomeCanal} = req.body
 
-            const numOrg = nomeOrg.length;
+            let orgList =[]
 
+            let Org ={
+                "nomeOrg":"",
+                "numPeer":""
+            }
+
+            for(let i =0; i<nomeOrg.length; i++){
+                Org={nomeOrg:nomeOrg[i], numPeer:numPeer[i]}
+                orgList.push(Org)
+            }
+                console.log(orgList)
             const redeDatabase = new RedeDatabase({
                 nomeRede: nomeRede,
                 descricaoRede: descricaoRede,
                 nomeOrg: nomeOrg,
-                numOrg: numOrg,
                 numPeer: numPeer,
-                nomeCanal: nomeCanal
+                nomeCanal: nomeCanal,
+                Org: orgList
             })
     
             const newredeDatabase = await redeDatabase.save()
-            */
-
+                  
             res.redirect('/result?msg=success');
         } else {
             res.redirect('/result?msg=error');

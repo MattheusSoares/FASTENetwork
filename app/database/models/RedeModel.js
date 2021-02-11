@@ -8,21 +8,20 @@ const RedeSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    nomeOrg:{
-        type: String,
-        required: true
-    },
-    numOrg:{
-        type:String,
-        required: true
-    },
-    numPeer:{
-        type: String,
+
+    Org:{
+        type: Object,
         required: true
     },
     nomeCanal:{
         type: String,
         required: true
+    },
+    Data_de_Criação:{
+        type: Date,
+        required: true,
+        default: Date.now
+
     }
 })
 
