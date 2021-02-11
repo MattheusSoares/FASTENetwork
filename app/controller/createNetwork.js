@@ -7,7 +7,8 @@ const crypto = require('crypto');
 
 module.exports = {
    async creatAndSave(req,res) {
-      let {nomeRede, descricaoRede, nomeOrg, numPeer, numOrg, nomeCanal} = req.body;
+      var {nomeRede, descricaoRede, nomeOrg, numPeer, nomeCanal} = req.body;
+
 
       const networkName = nomeRede.split(" ").join("_");
       
@@ -255,13 +256,13 @@ module.exports = {
       async function changeWriteFile(file, option, value){
          // Efetua a alteração nos arquivos
          const fileReader = await readFile(file); // Efetua a leitura do arquivo
-         const fileReplace = await Promise.resolve (replaceFile(String(fileReader), option, String(value).toLocaleLowerCase())); // Efetua a troca do escrito
+         const fileReplace = await Promise.resolve (replaceFile(String(fileReader), option, value)); // Efetua a troca do escrito
          await Promise.resolve(writeFile(file, fileReplace)); // Escreve no arquivo com os dados alterados
       }
       //Adiciona os dados em um arquivo
       async function changeAppendFile(fileOrigin, fileDestiny, option, value){
          const fileReader = await readFile(fileOrigin);
-         const fileReplace = await Promise.resolve (replaceFile(String(fileReader), option, String(value).toLocaleLowerCase()));
+         const fileReplace = await Promise.resolve (replaceFile(String(fileReader), option, value));
          await Promise.resolve(appendFile(fileDestiny, fileReplace));
       }
       //Cria o arquivo base.yaml de uma network
@@ -333,7 +334,7 @@ module.exports = {
          for (let i = 0; i < nomeOrg.length; i++) {      
             await changeAppendFile(configtxOrganizationOrgs, configtx, 'orgname', nomeOrg[i]);
          }
-         await changeAppendFile(configtxCapabilities, configtx, 'OrganizationsOrgs', numOrg);//Verificar a necessidade
+         await changeAppendFile(configtxCapabilities, configtx, 'OrganizationsOrgs', '1');//Verificar a necessidade
          await changeAppendFile(configtxApplication, configtx, 'portorderer', portOrderer);
          await changeAppendFile(configtxOrderer, configtx, 'OrganizationsOrgs', 'nomeOrg[i]');
          await changeAppendFile(configtxChannel, configtx, 'Channelname', nomeCanal);
@@ -396,10 +397,8 @@ module.exports = {
             const orgNameFile = path.resolve(__dirname, pathNetworks+"/"+nomeOrg[i]+".yaml");
 
             await changeWriteFile(orgNameFile, 'orgname', nomeOrg[i]);
-            await changeWriteFile(orgNameFile, 'orgname', nomeRede);
-            await changeWriteFile(orgNameFile, 'orgname', descricaoRede);
-            await changeWriteFile(orgNameFile, 'orgname', nomeOrg[i]);
-            await changeWriteFile(orgNameFile, 'orgname', nomeOrg[i]);
+            await changeWriteFile(orgNameFile, 'networkname', nomeRede);
+            await changeWriteFile(orgNameFile, 'description', descricaoRede);
          }
       }
       //Adiciona as chaves das organizações nos arquivos .yaml
