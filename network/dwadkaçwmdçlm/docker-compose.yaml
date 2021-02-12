@@ -1,0 +1,222 @@
+#
+# Copyright IBM Corp. All Rights Reserved.
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+version: '2'
+
+networks:
+  dwadkaçwmdçlm:
+
+services:
+    
+    
+    peer0.mdçwamdç.com:
+        container_name: peer0.mdçwamdç.com
+        extends:
+          file:   base.yaml
+          service: peer-base
+        dns_search: .
+        environment:   
+          - GODEBUG=netdns=go      
+          - CORE_PEER_ID=peer0.mdçwamdç.com
+          - CORE_PEER_LOCALMSPID=mdçwamdçMSP
+          - CORE_PEER_ADDRESS=peer0.mdçwamdç.com:7051
+          - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.mdçwamdç.com:7051     
+          - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.mdçwamdç.com:7051
+          - CORE_PEER_LISTENADDRESS=0.0.0.0:7051
+          
+          
+          
+          - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
+          - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=couchdb0:5984
+          # The CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME and CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD
+          # provide the credentials for ledger to connect to CouchDB.  The username and password must
+          # match the username and password set for the associated CouchDB.
+          - CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=
+          - CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=
+        ports:
+          - 7051:7051
+          - 7080:7053
+        volumes:
+          - ./crypto-config/peerOrganizations/mdçwamdç.com/peers/peer0.mdçwamdç.com/:/etc/hyperledger/crypto/peer          
+        depends_on:
+          - orderer.example.com
+          - couchdb0
+        networks:
+          - dwadkaçwmdçlm
+
+    couchdb0:
+        container_name: couchdb0
+        image: hyperledger/fabric-couchdb
+        # Populate the COUCHDB_USER and COUCHDB_PASSWORD to set an admin user and password
+        # for CouchDB.  This will prevent CouchDB from operating in an "Admin Party" mode.
+        environment:
+          - COUCHDB_USER=
+          - COUCHDB_PASSWORD=
+        ports:
+          - 5984:5984
+        networks:
+          - dwadkaçwmdçlm
+
+    ca.mdçwamdç.com:
+        image: hyperledger/fabric-ca
+        environment:
+          - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
+          - FABRIC_CA_SERVER_CA_NAME=ca-mdçwamdç
+          - FABRIC_CA_SERVER_CA_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.mdçwamdç.com.mdçwamdç.com-cert.pem
+          - FABRIC_CA_SERVER_CA_KEYFILE=/etc/hyperledger/fabric-ca-server-config/priv_sk
+          - FABRIC_CA_SERVER_TLS_ENABLED=true
+          - FABRIC_CA_SERVER_TLS_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.mdçwamdç.com.mdçwamdç.com-cert.pem
+          - FABRIC_CA_SERVER_TLS_KEYFILE=/etc/hyperledger/fabric-ca-server-config/priv_sk
+        ports:
+          - "9055:7054"
+        command: sh -c 'fabric-ca-server start -b admin:adminpw -d'
+        volumes:
+          - ./crypto-config/peerOrganizations/mdçwamdç.com/ca/:/etc/hyperledger/fabric-ca-server-config
+        container_name: ca.mdçwamdç.com
+        networks:
+          - dwadkaçwmdçlm
+    
+    
+    peer0.dawda.com:
+        container_name: peer0.dawda.com
+        extends:
+          file:   base.yaml
+          service: peer-base
+        dns_search: .
+        environment:   
+          - GODEBUG=netdns=go      
+          - CORE_PEER_ID=peer0.dawda.com
+          - CORE_PEER_LOCALMSPID=dawdaMSP
+          - CORE_PEER_ADDRESS=peer0.dawda.com:7051
+          - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.dawda.com:7051     
+          - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.dawda.com:7051
+          - CORE_PEER_LISTENADDRESS=0.0.0.0:7051
+          
+          
+          
+          - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
+          - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=couchdb1:5985
+          # The CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME and CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD
+          # provide the credentials for ledger to connect to CouchDB.  The username and password must
+          # match the username and password set for the associated CouchDB.
+          - CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=
+          - CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=
+        ports:
+          - 8051:7051
+          - 7081:7053
+        volumes:
+          - ./crypto-config/peerOrganizations/dawda.com/peers/peer0.dawda.com/:/etc/hyperledger/crypto/peer          
+        depends_on:
+          - orderer.example.com
+          - couchdb1
+        networks:
+          - dwadkaçwmdçlm
+
+    couchdb1:
+        container_name: couchdb1
+        image: hyperledger/fabric-couchdb
+        # Populate the COUCHDB_USER and COUCHDB_PASSWORD to set an admin user and password
+        # for CouchDB.  This will prevent CouchDB from operating in an "Admin Party" mode.
+        environment:
+          - COUCHDB_USER=
+          - COUCHDB_PASSWORD=
+        ports:
+          - 5985:5985
+        networks:
+          - dwadkaçwmdçlm    
+    
+    peer1.dawda.com:
+        container_name: peer1.dawda.com
+        extends:
+          file:   base.yaml
+          service: peer-base
+        dns_search: .
+        environment:   
+          - GODEBUG=netdns=go      
+          - CORE_PEER_ID=peer1.dawda.com
+          - CORE_PEER_LOCALMSPID=dawdaMSP
+          - CORE_PEER_ADDRESS=peer1.dawda.com:7051
+          - CORE_PEER_GOSSIP_BOOTSTRAP=peer1.dawda.com:7051     
+          - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer1.dawda.com:7051
+          - CORE_PEER_LISTENADDRESS=0.0.0.0:7051
+          
+          
+          
+          - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
+          - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=couchdb2:5986
+          # The CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME and CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD
+          # provide the credentials for ledger to connect to CouchDB.  The username and password must
+          # match the username and password set for the associated CouchDB.
+          - CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=
+          - CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=
+        ports:
+          - 9051:7051
+          - 7082:7053
+        volumes:
+          - ./crypto-config/peerOrganizations/dawda.com/peers/peer1.dawda.com/:/etc/hyperledger/crypto/peer          
+        depends_on:
+          - orderer.example.com
+          - couchdb2
+        networks:
+          - dwadkaçwmdçlm
+
+    couchdb2:
+        container_name: couchdb2
+        image: hyperledger/fabric-couchdb
+        # Populate the COUCHDB_USER and COUCHDB_PASSWORD to set an admin user and password
+        # for CouchDB.  This will prevent CouchDB from operating in an "Admin Party" mode.
+        environment:
+          - COUCHDB_USER=
+          - COUCHDB_PASSWORD=
+        ports:
+          - 5986:5986
+        networks:
+          - dwadkaçwmdçlm
+
+    ca.dawda.com:
+        image: hyperledger/fabric-ca
+        environment:
+          - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
+          - FABRIC_CA_SERVER_CA_NAME=ca-dawda
+          - FABRIC_CA_SERVER_CA_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.dawda.com.dawda.com-cert.pem
+          - FABRIC_CA_SERVER_CA_KEYFILE=/etc/hyperledger/fabric-ca-server-config/priv_sk
+          - FABRIC_CA_SERVER_TLS_ENABLED=true
+          - FABRIC_CA_SERVER_TLS_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.dawda.com.dawda.com-cert.pem
+          - FABRIC_CA_SERVER_TLS_KEYFILE=/etc/hyperledger/fabric-ca-server-config/priv_sk
+        ports:
+          - "9056:7054"
+        command: sh -c 'fabric-ca-server start -b admin:adminpw -d'
+        volumes:
+          - ./crypto-config/peerOrganizations/dawda.com/ca/:/etc/hyperledger/fabric-ca-server-config
+        container_name: ca.dawda.com
+        networks:
+          - dwadkaçwmdçlm
+
+
+    orderer.example.com:
+        container_name: orderer.example.com
+        image: hyperledger/fabric-orderer
+        environment:
+          - FABRIC_LOGGING_SPEC=debug
+          - ORDERER_GENERAL_LOGLEVEL=debug
+          - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
+          - ORDERER_GENERAL_GENESISMETHOD=file
+          - ORDERER_GENERAL_GENESISFILE=/etc/hyperledger/configtx/genesis.block
+          - ORDERER_GENERAL_LOCALMSPID=OrdererMSP
+          - ORDERER_GENERAL_LOCALMSPDIR=/etc/hyperledger/msp/orderer/msp
+          - ORDERER_GENERAL_TLS_ENABLED=true
+          - ORDERER_GENERAL_TLS_PRIVATEKEY=/etc/hyperledger/msp/orderer/tls/server.key
+          - ORDERER_GENERAL_TLS_CERTIFICATE=/etc/hyperledger/msp/orderer/tls/server.crt
+          - ORDERER_GENERAL_TLS_ROOTCAS=[/etc/hyperledger/msp/orderer/tls/ca.crt, ordererca]
+        working_dir: /opt/gopath/src/github.com/hyperledger/fabric/orderer
+        command: orderer
+        ports:
+          - 7050:7050
+        volumes:
+            - ./channel-artifacts/:/etc/hyperledger/configtx
+            - ./crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/:/etc/hyperledger/msp/orderer     
+       
+        networks:
+          - dwadkaçwmdçlm

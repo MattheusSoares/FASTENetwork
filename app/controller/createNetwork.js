@@ -34,6 +34,7 @@ module.exports = {
       const templateNetworkConfig = path.join(process.cwd(), '/template/networkconfig');
       const templateCrypto = path.join(process.cwd(), '/template/crypto');
       const templateConfigTx = path.join(process.cwd(), '/template/configtx');
+      const templateChaincode = path.join(process.cwd(), '/template/chaincode');
       // Define os arquivos da pasta base
       const baseFile = path.resolve(__dirname, templateBase, 'base.yaml');
       const dockerComposeFile = path.resolve(__dirname, templateBase, 'docker-compose.yaml');
@@ -73,6 +74,10 @@ module.exports = {
       const certificateAuthoritiesFile = path.resolve(__dirname, templateNetworkConfig, 'certificateAuthorities.yaml');
       const caFile = path.resolve(__dirname, templateNetworkConfig, 'ca.yaml');
       const orgFile = path.resolve(__dirname, templateNetworkConfig, 'org.yaml');
+      //Defiine os arquivos do Chaincode
+
+      const  chaincodeSmartContract = path.resolve(__dirname, templateChaincode, 'test.js');
+
       //Leitura de um arquivo
       const readFile = (file) => {
          return new Promise( (resolve, reject) => {
@@ -243,7 +248,7 @@ module.exports = {
       
          await fs.mkdirSync(pathNetworks+"/channel-artifacts");  
 
-         //await fsex.ensureDir(pathNetworks+"/src/github.com/chaincode");
+         await fsex.ensureDir(pathNetworks+"/src/github.com/chaincode");
          
          await fs.copyFileSync(baseFile, pathNetworks+"/base.yaml");
          await fs.copyFileSync(dockerComposeFile, pathNetworks+"/docker-compose.yaml");
@@ -401,6 +406,12 @@ module.exports = {
             await changeWriteFile(orgNameFile, 'description', descricaoRede);
          }
       }
+      //Cria os arquivos do chaincode
+      async function createChaincode(){
+         const chaincode = path.resolve(__dirname, pathNetworks+'/src/github.com/chaincode');
+         // await fsex.copy(chaincodesmartcontract, chaincodepathNetwork+"/blockflow-app");
+         await fsex.copy(chaincodeSmartContract, chaincode+"/test.js");
+      }
       //Adiciona as chaves das organizações nos arquivos .yaml
       async function creatKeys(){
          const dockerCompose = path.join(pathNetworks, '/docker-compose.yaml');
@@ -436,6 +447,8 @@ module.exports = {
 
       async function make(){
          await generateFiles();
+
+         await createChaincode();
 
          await createBaseFile();
          await createCryptoConfig();
