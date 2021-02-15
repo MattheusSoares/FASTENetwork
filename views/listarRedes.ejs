@@ -19,13 +19,12 @@
                 <h3>Redes</h3>
               </div>
 
-              <table class="table">
+              <table class="table" id="tableListRedes">
                 <thead>
                   <tr>
                     <th scope="col">Nome da Rede</th>
                     <th scope="col">Descrição</th>
                     <th scope="col">Número de Organizações</th>
-                    <th scope="col">Número de Nós por Organização</th>
                     <th scope="col">Nome do Canal</th>
                     <th scope="col"></th>
                   </tr>              
@@ -33,11 +32,103 @@
                 <tbody id="listRedes">
                 </tbody>
               </table>
+
+              <table class="table" id="tableRedeInfo" hidden>
+                <thead>
+                  <tr>
+                    <th scope="col">Nome da Rede</th>
+                    <th scope="col">Descrição</th>
+                    <th scope="col">Número de Organizações</th>
+                    <th scope="col">Nome do Canal</th>
+                    <th scope="col"></th>
+                  </tr>              
+                </thead>
+                <tbody id="redeInfo">
+                  
+                </tbody>                
+              </table>
+
+              <div class="row" id="divRedeInfo">
+                <div class="col-lg-12">
+
+                  <div class="row">
+                    <div class="col-lg-6" style="text-align: center;">
+                      <button class='btn btn-link'>Inicializar rede</button>
+                    </div>
+                    <div class="col-lg-6" style="text-align: center;">
+                      <button class='btn btn-link'>Criar canal</button>                      
+                    </div>
+                  </div>
+
+                  
+                  <div class="row">
+                    <div class="col-lg-6" style="text-align: center;">
+                      <button class='btn btn-link'>Criar identidades</button>
+                    </div>
+                    <div class="col-lg-6" style="text-align: center;">
+                      <button class='btn btn-link'>Conectar ao canal</button>                      
+                    </div>
+                  </div>
+
+
+                  <div class="row">
+                    <div class="col-lg-12" style="text-align: center;">
+                      
+
+                      <button type="button" class="btn btn-link" data-toggle="modal" data-target="#uploadChaincode">
+                        Upload Chaincode
+                      </button>
+                      
+                      
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-lg-6" style="text-align: center;">
+                      <button class='btn btn-link'>Instalar Chaincode</button>
+                    </div>
+                    <div class="col-lg-6" style="text-align: center;">
+                      <button class='btn btn-link'>Instanciar Chaincode</button>                      
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+
             </div>
           </div>
 
         </div>
       </section>
+    </div>
+  </div>
+</div>
+
+
+
+<div class="modal fade" id="uploadChaincode" tabindex="-1" role="dialog" aria-labelledby="uploadChaincodeLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="uploadChaincodeLabel">Uplaod Chaincode</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+        <form>
+          <div class="form-group">
+            <label for="exampleFormControlFile1">Escolha o arquivo .js para enviar</label>
+            <input type="file" class="form-control-file" id="exampleFormControlFile1">
+          </div>
+        </form>        
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+        <button type="button" class="btn btn-primary">Enviar</button>
+      </div>
     </div>
   </div>
 </div>
