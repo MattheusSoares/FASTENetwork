@@ -17,7 +17,7 @@ router.post('/routeCreateNetwork', async (req, res) => {
         res.redirect('/result?msg=existFile');
     } else {
         if (req.body != null) {
-//            createNetwork.creatAndSave(req, res);
+            createNetwork.creatAndSave(req, res);
             const {nomeRede, descricaoRede, nomeOrg, numPeer, nomeCanal} = req.body
 
             let orgList =[]
