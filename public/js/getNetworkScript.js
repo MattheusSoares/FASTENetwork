@@ -7,7 +7,6 @@ window.onload = function start(){
     axios.get('/network/routeGetNetwork')
     .then(function (response) {
         redes = response.data
-        console.log(redes)
         conteudo = "";
 
         for (let i = 0; i < redes.length; i++) {
@@ -54,9 +53,9 @@ $(document).on('click', '.infoNetwork', function () {
     
     axios.get('/network/routeGetNetworkById/'+_idNetwork)
     .then(function (response) {
-
+    
         rede = response.data
-        
+
         conteudo = "";
 
         conteudo += "<tr>";
@@ -74,8 +73,48 @@ $(document).on('click', '.infoNetwork', function () {
         conteudo += "</tr>";
 
         document.getElementById("redeInfo").innerHTML = conteudo;
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+        conteudoBotoes = "";
+        conteudoBotoes += "<div class='col-lg-12'>";
+                
+            conteudoBotoes += "<div class='row'>";
+                conteudoBotoes += "<div class='col-lg-6' style='text-align: center;'>";
+                    conteudoBotoes += "<a class='btn btn-link startNetwork' title = 'Inicializar rede' href='javascript:void(0)' data-_idrede='" + rede._id + "'>Inicializar rede</a>";
+                conteudoBotoes += "</div>";
+                conteudoBotoes += "<div class='col-lg-6' style='text-align: center;'>";
+                    conteudoBotoes += "<a class='btn btn-link stopNetwork' title = 'Parar rede' href='javascript:void(0)' data-_idrede='" + rede._id + "'>Parar rede</a>";
+                conteudoBotoes += "</div>";
+            conteudoBotoes += "</div>";
+                
+            conteudoBotoes += "<div class='row'>";
+                conteudoBotoes += "<div class='col-lg-12' style='text-align: center;'>";
+                    conteudoBotoes += "<a class='btn btn-link createChannel' title = 'Criar canal' href='javascript:void(0)' data-_idrede='" + rede._id + "'>Criar canal</a>";
+                conteudoBotoes += "</div>";
+            conteudoBotoes += "</div>";
+            
+            conteudoBotoes += "<div class='row'>";
+                conteudoBotoes += "<div class='col-lg-6' style='text-align: center;'>";
+                    conteudoBotoes += "<a class='btn btn-link createIdentity' title = 'Criar identidades' href='javascript:void(0)' data-_idrede='" + rede._id + "'>Criar identidades</a>";
+                conteudoBotoes += "</div>";
+                conteudoBotoes += "<div class='col-lg-6' style='text-align: center;'>";
+                    conteudoBotoes += "<a class='btn btn-link connectChannel' title = 'Conectar ao canal' href='javascript:void(0)' data-_idrede='" + rede._id + "'>Conectar ao canal</a>";
+                conteudoBotoes += "</div>";
+            conteudoBotoes += "</div>";
+            
+            
+            conteudoBotoes += "<div class='row'>";
+                conteudoBotoes += "<div class='col-lg-6' style='text-align: center;'>";
+                    conteudoBotoes += "<a class='btn btn-link installChaincode' title = 'Instalar Chaincode' href='javascript:void(0)' data-_idrede='" + rede._id + "'>Instalar Chaincode</a>";
+                conteudoBotoes += "</div>";
+                conteudoBotoes += "<div class='col-lg-6' style='text-align: center;'>";
+                    conteudoBotoes += "<a class='btn btn-link instantiateChaincode' title = 'Instanciar Chaincode' href='javascript:void(0)' data-_idrede='" + rede._id + "'>Instanciar Chaincode</a>";
+                conteudoBotoes += "</div>";
+            conteudoBotoes += "</div>";
+            
+        conteudoBotoes += "</div>";
 
+        document.getElementById("divRedeInfo").innerHTML = conteudoBotoes;
 
     })
 
@@ -97,5 +136,152 @@ $(document).on('click', '.closeInfoNetwork', function () {
     document.getElementById('tableRedeInfo').hidden = true
     document.getElementById('divRedeInfo').hidden = true
     document.getElementById('tableListRedes').hidden = false
+
+});
+
+$(document).on('click', '.startNetwork', function () { 
+
+    var _idNetwork = $(this).data('_idrede')
+
+    axios.get('/network/routeStartNetwork/'+_idNetwork)
+    .then(function (response) {
+        console.log(response.data)
+
+    })
+    
+    .catch(function (error) {
+        // handle error
+        console.log(error);
+    })
+
+    .finally(function () {
+        // always executed
+    });
+
+});
+
+$(document).on('click', '.stopNetwork', function () { 
+
+    var _idNetwork = $(this).data('_idrede')
+
+    axios.get('/network/routeStopNetwork/'+_idNetwork)
+    .then(function (response) {
+        console.log(response.data)
+
+    })
+    
+    .catch(function (error) {
+        // handle error
+        console.log(error);
+    })
+
+    .finally(function () {
+        // always executed
+    });
+
+});
+
+$(document).on('click', '.createChannel', function () { 
+
+    var _idNetwork = $(this).data('_idrede')
+
+    axios.get('/network/routeCreateChannel/'+_idNetwork)
+    .then(function (response) {
+        console.log(response.data)
+
+    })
+    
+    .catch(function (error) {
+        // handle error
+        console.log(error);
+    })
+
+    .finally(function () {
+        // always executed
+    });
+
+});
+
+$(document).on('click', '.createIdentity', function () { 
+
+    var _idNetwork = $(this).data('_idrede')
+
+    axios.get('/network/routeCreateIdentity/'+_idNetwork)
+    .then(function (response) {
+        console.log(response.data)
+
+    })
+    
+    .catch(function (error) {
+        // handle error
+        console.log(error);
+    })
+
+    .finally(function () {
+        // always executed
+    });
+
+});
+
+$(document).on('click', '.connectChannel', function () { 
+
+    var _idNetwork = $(this).data('_idrede')
+
+    axios.get('/network/routeConnectChannel/'+_idNetwork)
+    .then(function (response) {
+        console.log(response.data)
+
+    })
+    
+    .catch(function (error) {
+        // handle error
+        console.log(error);
+    })
+
+    .finally(function () {
+        // always executed
+    });
+
+});
+
+$(document).on('click', '.installChaincode', function () { 
+
+    var _idNetwork = $(this).data('_idrede')
+
+    axios.get('/network/routeInstallChaincode/'+_idNetwork)
+    .then(function (response) {
+        console.log(response.data)
+
+    })
+    
+    .catch(function (error) {
+        // handle error
+        console.log(error);
+    })
+
+    .finally(function () {
+        // always executed
+    });
+
+});
+
+$(document).on('click', '.instantiateChaincode', function () { 
+
+    var _idNetwork = $(this).data('_idrede')
+
+    axios.get('/network/routeInstantiateChaincode/'+_idNetwork)
+    .then(function (response) {
+        console.log(response.data)
+
+    })
+    
+    .catch(function (error) {
+        // handle error
+        console.log(error);
+    })
+
+    .finally(function () {
+        // always executed
+    });
 
 });

@@ -5,7 +5,9 @@ const rimraf = require("rimraf");
 const path = require('path');
 const RedeDatabase = require('../app/database/models/RedeModel')
 
-//Insere os dados na database e Network
+///////////////////////////////////////////////////////////////////////////////////////////
+//CRUD REDE
+///////////////////////////////////////////////////////////////////////////////////////////
 router.post('/routeCreateNetwork', async (req, res) => {
     
     console.log(req.body);
@@ -75,6 +77,56 @@ router.post('/routeDeleteNetwork', async (req, res)=>{
             res.redirect('/resultDelete?msg=success');     
     });
     
+});
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////
+//OPERAÇÕES REDE
+///////////////////////////////////////////////////////////////////////////////////////////
+
+
+// Iniciar a rede
+router.get('/routeStartNetwork/:id', async (req, res)=>{
+    const rededatabase = await RedeDatabase.findById(req.params.id)
+    res.send(rededatabase);
+});
+
+// Parar a rede
+router.get('/routeStopNetwork/:id', async (req, res)=>{
+    const rededatabase = await RedeDatabase.findById(req.params.id)
+    res.send(rededatabase);
+});
+
+// Criar canal
+router.get('/routeCreateChannel/:id', async (req, res)=>{
+    const rededatabase = await RedeDatabase.findById(req.params.id)
+    res.send(rededatabase);
+});
+
+// Criar identidade
+router.get('/routeCreateIdentity/:id', async (req, res)=>{
+    const rededatabase = await RedeDatabase.findById(req.params.id)
+    res.send(rededatabase);
+});
+
+// Conectar canal
+router.get('/routeConnectChannel/:id', async (req, res)=>{
+    const rededatabase = await RedeDatabase.findById(req.params.id)
+    res.send(rededatabase);
+});
+
+// Instalar chaincode
+router.get('/routeInstallChaincode/:id', async (req, res)=>{
+    const rededatabase = await RedeDatabase.findById(req.params.id)
+    res.send(rededatabase);
+});
+
+// Instanciar chaincode
+router.get('/routeInstantiateChaincode/:id', async (req, res)=>{
+    const rededatabase = await RedeDatabase.findById(req.params.id)
+    res.send(rededatabase);
 });
 
 module.exports = router;
