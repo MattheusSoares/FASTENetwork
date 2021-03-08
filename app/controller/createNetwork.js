@@ -7,23 +7,23 @@ const crypto = require('crypto');
 
 module.exports = {
    async creatAndSave(req,res) {
-      var {nomeRede, descricaoRede, nomeOrg, numPeer, nomeCanal} = req.body;
+      const {nomeRede, descricaoRede, nomeOrg, numPeer, nomeCanal} = req.body;
 
 
       const networkName = nomeRede.split(" ").join("_");
       
-      let portNumber = 7051;
-      let portNumber2 = 7051;
-      let portPeer2  = 7080;
-      let portOrderer = 7050;
-      let couchdbNumber = 0;
-      let portCouch = 5984;
-      let portCA = 9054;
-      let ordererPeer = [];
-      let ordererCA = [];
-      let portnumberConfig = 7051;
-      let peerOrganizations = [];
-      let portcaNetworkConfig = 9054;
+      var portNumber = 7051;
+      var portNumber2 = 7051;
+      var portPeer2  = 7080;
+      var portOrderer = 7050;
+      var couchdbNumber = 0;
+      var portCouch = 5984;
+      var portCA = 9054;
+      var ordererPeer = [];
+      var ordererCA = [];
+      var portnumberConfig = 7051;
+      var peerOrganizations = [];
+      var portcaNetworkConfig = 9054;
 
       const networks = path.join(process.cwd(), 'network');
       const pathNetworks = networks + '/' + networkName;
@@ -37,12 +37,13 @@ module.exports = {
       const templateChaincode = path.join(process.cwd(), '/template/chaincode');
       // Define os arquivos da pasta base
       const baseFile = path.resolve(__dirname, templateBase, 'base.yaml');
+
       const dockerComposeFile = path.resolve(__dirname, templateBase, 'docker-compose.yaml');
-      const dockerComposeCAFile = path.resolve(__dirname, templateBase, 'docker-compose-ca.yaml');
-      const dockerComposeCLIFile = path.resolve(__dirname, templateBase, 'docker-compose-cli.yaml');
-      const dockerComposeCouchDBFile = path.resolve(__dirname, templateBase, 'docker-compose-couchdb.yaml');
-      const dockerComposeOrdererFile = path.resolve(__dirname, templateBase, 'docker-compose-orderer.yaml');
-      const dockerComposePeerFile = path.resolve(__dirname, templateBase, 'docker-compose-peer.yaml');
+      const ordererFile = path.resolve(__dirname, templateBase, 'orderer.yaml');
+      const caOrdererFile = path.resolve(__dirname, templateBase, 'ca-orderer.yaml');
+      const caOrganizationFile = path.resolve(__dirname, templateBase, 'ca-organization.yaml');
+      const peerOrganizationFile = path.resolve(__dirname, templateBase, 'peer-organization.yaml');
+      const couchdbFile = path.resolve(__dirname, templateBase, 'couchdb.yaml');
       // Define os arquivos da pasta configtx
       const configtxFile = path.resolve(__dirname, templateConfigTx, 'configtx.yaml');
 
@@ -62,20 +63,25 @@ module.exports = {
       // Define os arquivos da pasta crypto
       const cryptogenFile = path.resolve(__dirname, templateCrypto, 'cryptogen.yaml');
       const peerCryptogenFile = path.resolve(__dirname, templateCrypto, 'peer-cryptogen.yaml');
+
       // Define os arquivos da pasta networkconfig
       const networkConfigFile = path.resolve(__dirname, templateNetworkConfig, 'network-config.yaml');
-      const channelFile = path.resolve(__dirname, templateNetworkConfig, 'channel.yaml');
-      const peerChannelFile = path.resolve(__dirname, templateNetworkConfig, 'peerchannel.yaml');
-      const chaincodeFile = path.resolve(__dirname, templateNetworkConfig, 'chaincode.yaml');
-      const organizationOrgMSPFile = path.resolve(__dirname, templateNetworkConfig, 'organizationsOrgMSP.yaml');
-      const organizationCAFile = path.resolve(__dirname, templateNetworkConfig, 'organizationsCA.yaml');
-      const ordererFile = path.resolve(__dirname, templateNetworkConfig, 'orderer.yaml');
-      const peerFile = path.resolve(__dirname, templateNetworkConfig, 'peer.yaml');
+      const clientFile = path.resolve(__dirname, templateNetworkConfig, 'client.yaml');
+      const channelsFile = path.resolve(__dirname, templateNetworkConfig, 'channels.yaml');
+      const channelsPeerFile = path.resolve(__dirname, templateNetworkConfig, 'channels_peer.yaml');
+      const channelsChaincodeFile = path.resolve(__dirname, templateNetworkConfig, 'channels_chaincode.yaml');
+      const organizationsFile = path.resolve(__dirname, templateNetworkConfig, 'organizations.yaml');
+      const organizationsOrgNameFile = path.resolve(__dirname, templateNetworkConfig, 'organizations_orgname.yaml');
+      const organizationsPeerLineFile = path.resolve(__dirname, templateNetworkConfig, 'organizations_peerLine.yaml');
+      const organizationsCaFile = path.resolve(__dirname, templateNetworkConfig, 'organizations_ca.yaml');
+      const orderersFile = path.resolve(__dirname, templateNetworkConfig, 'orderers.yaml');
+      const peersFile = path.resolve(__dirname, templateNetworkConfig, 'peers.yaml');
       const certificateAuthoritiesFile = path.resolve(__dirname, templateNetworkConfig, 'certificateAuthorities.yaml');
-      const caFile = path.resolve(__dirname, templateNetworkConfig, 'ca.yaml');
+      const certificateAuthoritiesCAOrgFile = path.resolve(__dirname, templateNetworkConfig, 'certificateAuthorities_caorg.yaml');
+      const networkConfigOrg = path.resolve(__dirname, templateNetworkConfig, 'org.yaml');
       const orgFile = path.resolve(__dirname, templateNetworkConfig, 'org.yaml');
-      //Defiine os arquivos do Chaincode
 
+      //Defiine os arquivos do Chaincode
       const  chaincodeSmartContract = path.resolve(__dirname, templateChaincode, 'test.js');
 
       //Leitura de um arquivo
@@ -149,6 +155,10 @@ module.exports = {
                var newValue = String(contents).replace(/Channelname/g, value);
                resolve(newValue);
                break;
+            case 'channelname':
+               var newValue = String(contents).replace(/channelname/g, value);
+               resolve(newValue);
+               break;   
             case 'couchdbname':
                var newValue = String(contents).replace(/couchdbname/g, 'couchdb' + value);
                resolve(newValue);
@@ -173,6 +183,10 @@ module.exports = {
                var newValue = String(contents).replace(/description/g, value);
                resolve(newValue);
                break;
+               case 'descriptions':
+                  var newValue = String(contents).replace(/descriptions/g, value);
+                  resolve(newValue);
+                  break;
             case 'keyorg':
                var newValue = String(contents).replace(/keyorg/g, value);
                resolve(newValue);
@@ -238,7 +252,7 @@ module.exports = {
                resolve(newValue);
                break;
             default:
-               console.log('Não encontou a opção');
+               console.log('Não encontou a opção ' + stringReplace);
          }
          } )
       };
@@ -278,45 +292,41 @@ module.exports = {
       //Cria o arquivo docker-compose.yaml de uma network
       async function createDockerComposeFile(){
          const dockerCompose = path.join(pathNetworks, '/docker-compose.yaml');
-    
+         /* docker-compose.yaml */
          await changeWriteFile(dockerCompose, 'networkname', networkName);
-
-         let orgName = String(nomeOrg).split(' ');
-         
+         /* orderer */
+         await changeAppendFile(ordererFile, dockerCompose, 'networkname', nomeRede);
+         await changeWriteFile(dockerCompose, 'portorderer', portOrderer);
+         /* ca-orderer.yaml */
+         await changeAppendFile(caOrdererFile, dockerCompose, 'networkname', nomeRede);
+         await changeWriteFile(dockerCompose, 'portca', portCA);
+         portCA++;
          for (let i = 0; i < nomeOrg.length; i++) {
             const peer = numPeer[i];
-
+            /* ca_organization */
+            await changeAppendFile(caOrganizationFile, dockerCompose, 'networkname', nomeRede);
+            await changeWriteFile(dockerCompose, 'orgname', nomeOrg[i]);
+            await changeWriteFile(dockerCompose, 'portca', portCA);
             for (let j = 0; j < peer; j++) {
-               await changeAppendFile(dockerComposePeerFile, dockerCompose, 'orgname', nomeOrg[i]);
-               await changeWriteFile(dockerCompose, 'peernumber', j);
+               /* couchbd.yaml */
+               await changeAppendFile(couchdbFile, dockerCompose, 'networkname', nomeRede);
                await changeWriteFile(dockerCompose, 'couchdbname', couchdbNumber);
                await changeWriteFile(dockerCompose, 'portcouch', portCouch);
-               await changeWriteFile(dockerCompose, 'portpeer2', portPeer2);
-               await changeWriteFile(dockerCompose, 'networkname', networkName);
+               /* peer_organization */
+               await changeAppendFile(peerOrganizationFile, dockerCompose, 'networkname', nomeRede);
                await changeWriteFile(dockerCompose, 'portnumber', portNumber);
-
-               await changeAppendFile(dockerComposeCouchDBFile, dockerCompose, 'couchdbname', couchdbNumber);
+               await changeWriteFile(dockerCompose, 'portpeer2', portPeer2);
+               await changeWriteFile(dockerCompose, 'peernumber', j);
+               await changeWriteFile(dockerCompose, 'orgname', nomeOrg[i]);
                await changeWriteFile(dockerCompose, 'couchdbname', couchdbNumber);
                await changeWriteFile(dockerCompose, 'portcouch', portCouch);
-               await changeWriteFile(dockerCompose, 'networkname', networkName);
-
                portNumber = portNumber+1000;
                portPeer2++;
                couchdbNumber++;
                portCouch++;
             }
-
             portCA++;
-            await changeAppendFile(dockerComposeCAFile, dockerCompose, 'orgname', nomeOrg[i]);
-            await changeWriteFile(dockerCompose, 'keyorg', 'keyorg');
-            await changeWriteFile(dockerCompose, 'portca', portCA);
-            await changeWriteFile(dockerCompose, 'networkname', networkName);
-
-         } 
-
-         await changeAppendFile(dockerComposeOrdererFile, dockerCompose, 'networkname', networkName);
-         await changeWriteFile(dockerCompose, 'portorderer', portOrderer);
-         await changeWriteFile(dockerCompose, 'ordererpeer', ordererPeer);
+         }
       }
       //Cria o arquivo crypto-config.yaml de uma network
       async function createCryptoConfig(){
@@ -325,10 +335,9 @@ module.exports = {
          let orgName = String(nomeOrg).split(' ');
 
          for (let i = 0; i<nomeOrg.length; i++) {
-            for (let j = 0; j < numPeer.length; j++ ) {
                await changeAppendFile(peerCryptogenFile, cryptogen, 'orgname', nomeOrg[i]);
-               await changeWriteFile(cryptogen, 'countpeer', numPeer[j]);
-            } 
+               await changeWriteFile(cryptogen, 'countpeer', numPeer[i]);
+
          }
       }
       //Cria o arquivo configtx.yaml de uma network
@@ -356,55 +365,76 @@ module.exports = {
       }
       //Cria o arquivo network-config.yaml de uma network
       async function creatNetworkConfig(){
-         const networkconfig = path.join(pathNetworks, '/network-config.yaml')
-
-         await changeWriteFile(networkconfig, 'description', descricaoRede);
+               
+         const networkconfig = path.join(pathNetworks, '/network-config.yaml');
+         /* network_config */
          await changeWriteFile(networkconfig, 'networkname', networkName);
-
-         await changeAppendFile(channelFile, networkconfig, 'Channelname', nomeCanal);
-
-         for (let i = 0; i<nomeOrg.length; i++) {
-            await changeAppendFile(peerChannelFile, networkconfig, 'orgname', nomeOrg[i]);
-            await changeWriteFile(networkconfig, 'peernumber', numPeer[i]);
-         }         
-
-         await changeAppendFile(chaincodeFile, networkconfig, 'orgname', '');
-
-         for (let i = 0; i<nomeOrg.length; i++) {
-            await changeAppendFile(organizationOrgMSPFile, networkconfig, 'orgname', nomeOrg[i]);
-            await changeWriteFile(networkconfig, 'peersOrgs', numPeer[i]);
-            await changeAppendFile(organizationCAFile, networkconfig, 'orgname', nomeOrg[i]);
-            await changeWriteFile(networkconfig, 'keyorg', 'keyorg');
+         await changeWriteFile(networkconfig, 'descriptions', descricaoRede);
+         /* client */
+         await changeAppendFile(clientFile, networkconfig, 'orgname', nomeOrg[0]);
+         /* channels */
+         await changeAppendFile(channelsFile, networkconfig, 'channelname', nomeCanal);
+         /* channels_peer */
+         var portNumber = 7051;
+         for(let i = 0; i < nomeOrg.length; i++) {
+            await changeAppendFile(channelsPeerFile, networkconfig, 'orgname', nomeOrg[i]);
+            await changeWriteFile(networkconfig, 'peernumber', '0');
+            portPeer2++;
          }
-
-
-         for (let i = 0; i<nomeOrg.length; i++) {
-            await changeAppendFile(peerFile, networkconfig, 'portpeer', portPeer2++);
-            await changeWriteFile(networkconfig, 'orgname', nomeOrg[i]);
-            await changeWriteFile(networkconfig, 'peernumber', numPeer[i]);
+         /* channels_chaincode */
+         await changeAppendFile(channelsChaincodeFile, networkconfig, 'orgname', nomeOrg[0]);
+         /* organizations */
+         await changeAppendFile(organizationsFile, networkconfig, 'orgname', nomeOrg[0]);
+         /* organizations_orgname */
+         for(let i = 0; i < nomeOrg.length; i++) {
+            /* organizations_peerLine */
+            await changeAppendFile(organizationsOrgNameFile, networkconfig, 'orgname', nomeOrg[i]);
+            for(let j = 0; j < numPeer[i]; j++) {
+               await changeAppendFile(organizationsPeerLineFile, networkconfig, 'orgname', nomeOrg[i]);
+               await changeWriteFile(networkconfig, 'peernumber', j);
+               portNumber = portNumber+1000;
+            }
+            /* organizations_ca */
+            await changeAppendFile(organizationsCaFile, networkconfig, 'orgname', nomeOrg[i]);
          }
-
-         await changeAppendFile(certificateAuthoritiesFile, networkconfig, 'orgname', '');
-         for (let i = 0; i<nomeOrg.length; i++) {
-            await changeAppendFile(caFile, networkconfig, 'portca', portcaNetworkConfig);
-            await changeWriteFile(networkconfig, 'orgname', nomeOrg[i]);
+         /* orderers */
+         await changeAppendFile(orderersFile, networkconfig, 'portorderer', portOrderer);
+         /* peers */
+         var portNumber = 7051;
+         for(let i = 0; i < nomeOrg.length; i++) {
+            for(let j = 0; j < numPeer[i]; j++) {
+               await changeAppendFile(peersFile, networkconfig, 'portpeer', portPeer2);
+               await changeWriteFile(networkconfig, 'orgname', nomeOrg[i]);
+               await changeWriteFile(networkconfig, 'peernumber', j);
+               portNumber = portNumber+1000;
+            }
          }
-         
-         for (let i = 0; i<nomeOrg.length; i++) {
-            await changeAppendFile(orgFile, networkconfig, 'networkname', networkName);
-            await changeWriteFile(networkconfig, 'orgname', nomeOrg[i]);
-            await changeWriteFile(networkconfig, 'description', descricaoRede);
+         /* certificateAuthorities */
+         await changeAppendFile(certificateAuthoritiesFile, networkconfig, 'orgname', nomeOrg[0]);
+         /* certificateAuthorities_caorg */
+         var portCA = 9054;
+         for(let i = 0; i < nomeOrg.length; i++) {
+            await changeAppendFile(certificateAuthoritiesCAOrgFile, networkconfig, 'orgname', nomeOrg[i]);
+            await changeWriteFile(networkconfig, 'portca', portCA);
+            portCA++;
          }
+         /* org.yaml */
+         for(let i = 0; i < nomeOrg.length; i++){
+            
+            await fs.copyFileSync(networkConfigOrg, pathNetworks+"/"+nomeOrg[i]+".yaml");
+            const orgnameFile = path.resolve(__dirname, pathNetworks+"/"+nomeOrg[i]+".yaml");
 
-         for (let i = 0; i<nomeOrg.length; i++) {
-            await fs.copyFileSync(orgFile, pathNetworks+"/"+nomeOrg[i]+".yaml");
+            await changeWriteFile(orgnameFile, 'orgname', nomeOrg[i]);
+            await changeWriteFile(orgnameFile, 'networkname', nomeRede);
+            await changeWriteFile(orgnameFile, 'descriptions', descricaoRede);
 
-            const orgNameFile = path.resolve(__dirname, pathNetworks+"/"+nomeOrg[i]+".yaml");
 
-            await changeWriteFile(orgNameFile, 'orgname', nomeOrg[i]);
-            await changeWriteFile(orgNameFile, 'networkname', nomeRede);
-            await changeWriteFile(orgNameFile, 'description', descricaoRede);
-         }
+            // const constentsOrgname = await readFile(orgnameFile);
+            // const replaceconstentsOrg =  await Promise.resolve(replaceFile(constentsOrgname,"orgname",nomeOrg[i]));
+            // const replaceconstentsOrgNetwork =  await Promise.resolve(replaceFile(replaceconstentsOrg,"networkname",nomeRede));  
+            // const networkConfigDescription =  await Promise.resolve(replaceFile(replaceconstentsOrgNetwork,"description",descricaoRede));
+            // await Promise.resolve(writeFile(orgnameFile, networkConfigDescription));
+        }
       }
       //Cria os arquivos do chaincode
       async function createChaincode(){
@@ -435,8 +465,6 @@ module.exports = {
          shell.exec( bin + 'configtxgen -profile SampleOrgs -outputBlock ./channel-artifacts/genesis.block -channelID ' + nomeCanal );
 
          shell.exec( bin + 'configtxgen -profile ' + nomeCanal + ' -outputCreateChannelTx ./channel-artifacts/channel.tx -channelID ' + String(nomeCanal).toLocaleLowerCase()  );
-
-         let orgName = String(nomeOrg).split(' ');
 
          for (let i = 0; i<nomeOrg.length; i++) {
             shell.exec( bin + 'configtxgen -profile ' + nomeCanal + ' -outputAnchorPeersUpdate ./channel-artifacts/' + nomeOrg[i] + 'MSPanchors.tx -channelID ' + nomeCanal + ' -asOrg ' + nomeOrg[i] + 'MSP' );

@@ -1,4 +1,3 @@
-    
     # [Optional]. Certificate Authorities issue certificates for identification purposes in a Fabric based
     # network. Typically certificates provisioning is done in a separate process outside of the
     # runtime network. Fabric-CA is a special certificate authority that provides a REST APIs for
@@ -15,6 +14,7 @@
     # this way. The SDK should allow applications to set the org admin identity via APIs, and only use
     # this route as an alternative when it exists.
     adminPrivateKey:
-      path: ./crypto-config/peerOrganizations/orgname.com/users/Admin@orgname.com/msp/keystore/keyorg
-    signedCert: 
-      path: ./crypto-config/peerOrganizations/orgname.com/users/Admin@orgname.com/msp/signcerts/Admin@orgname.com-cert.pem
+      path: ./crypto-config/peerOrganizations/orgname.example.com/users/Admin@orgname.example.com/msp/keystore/keyorg
+    signedCert:
+      path: ./crypto-config/peerOrganizations/orgname.example.com/users/Admin@orgname.example.com/msp/signcerts/Admin@orgname.example.com-cert.pem
+

@@ -19,7 +19,7 @@ x-type: "networkname"
 #
 # Describe what the target network is/does.
 #
-description: "description"
+description: "descriptions"
 
 #
 # Schema version of the content. Used by the SDK to apply the corresponding parsing rules.

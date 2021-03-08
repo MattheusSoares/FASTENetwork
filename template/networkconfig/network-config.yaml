@@ -1,5 +1,10 @@
 ---
 #
+# Copyright Fujitsu Australia Software Technology, IBM Corp. All Rights Reserved.
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+#
 # The network connection profile provides client applications the information about the target
 # blockchain network that are necessary for the applications to interact with it. These are all
 # knowledge that must be acquired from out-of-band sources. This file provides such a source.
@@ -19,10 +24,9 @@ x-type: "networkname"
 #
 # Describe what the target network is/does.
 #
-description: "description"
+description: "descriptions"
 
 #
 # Schema version of the content. Used by the SDK to apply the corresponding parsing rules.
 #
-version: "1.0"
-
+version: 1.0.0

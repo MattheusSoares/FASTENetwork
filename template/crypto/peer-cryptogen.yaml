@@ -1,10 +1,11 @@
- 
+  # ---------------------------------------------------------------------------
+  # Org2: See "Org1" for full specification
+  # ---------------------------------------------------------------------------
   - Name: orgname
     Domain: orgname.com
-    CA:
-       Hostname: ca.orgname.com  
     Template:
       Count: countpeer
+    EnableNodeOUs: true
     SANS:
         - "localhost"
     Users:
