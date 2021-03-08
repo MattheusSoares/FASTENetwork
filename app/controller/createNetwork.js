@@ -522,6 +522,27 @@ module.exports = {
             return "exist";
          }
          return "notExist";
-   }
+   },
+
+   async startNetwork(rededatabase){
+      
+      const networks = path.join(process.cwd(), 'network');
+      const pathNetworks = networks + '/' + rededatabase.nomeRede;
+
+      const composeFile = pathNetworks+'/docker-compose.yaml';
+      
+      shell.exec('docker-compose -f '+composeFile+' up -d');
+      
+  },
+
+  async stopNetwork(rededatabase){
+      const networks = path.join(process.cwd(), 'network');
+      const pathNetworks = networks + '/' + rededatabase.nomeRede;
+
+      const composeFile = pathNetworks+'/docker-compose.yaml';
+      
+      shell.exec('docker-compose -f '+composeFile+' down');
+
+  }
 
 }

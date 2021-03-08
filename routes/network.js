@@ -91,12 +91,14 @@ router.post('/routeDeleteNetwork', async (req, res)=>{
 router.get('/routeStartNetwork/:id', async (req, res)=>{
     const rededatabase = await RedeDatabase.findById(req.params.id)
     res.send(rededatabase);
+    createNetwork.startNetwork(rededatabase);
 });
 
 // Parar a rede
 router.get('/routeStopNetwork/:id', async (req, res)=>{
     const rededatabase = await RedeDatabase.findById(req.params.id)
     res.send(rededatabase);
+    createNetwork.stopNetwork(rededatabase);
 });
 
 // Criar canal
