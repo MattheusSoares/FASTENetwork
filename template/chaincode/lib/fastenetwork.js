@@ -9,14 +9,7 @@
 const { Contract } = require('fabric-contract-api');
 
 class FasteNetwork extends Contract {
-/*
-- Impressora:
-    id: printer3d1,
-  	type: printer3d,
-	timestamp: int
-    file_name: Text
-    printer3d_state: Text
-*/
+    
     async initLedger(ctx){
         await ctx.stub.putState("Init", "Fasten Network Project");
         return "success";
@@ -32,30 +25,30 @@ class FasteNetwork extends Contract {
         return response.toString();
     }
 
-    async createPrinter(ctx, printerID, type, timestamp, file_name, printer3d_state) {
-        console.info('============= START : Create Printer ===========');
+    async createTransaction(ctx, transactionID, userPki, iotPki, task, timestamp) {
+        console.info('============= START : Create Transaction ===========');
 
-        const printer = {
-            docType: 'printer',
-            type,
+        const transaction = {
+            docType: 'transaction',
+            userPki,
+            iotPki,
+            task,
             timestamp,
-            file_name,
-            printer3d_state,
         };
 
-        var response = await ctx.stub.putState(printerID, Buffer.from(JSON.stringify(printer)));
-        console.info('============= END : Create Printer ===========');
+        var response = await ctx.stub.putState(transactionID, Buffer.from(JSON.stringify(transaction)));
+        console.info('============= END : Create Transaction ===========');
         console.info(response);
     }
 
 
-    async queryPrinter(ctx, printerID) {
-        const printerAsBytes = await ctx.stub.getState(printerID);
-        if (!printerAsBytes || printerAsBytes.length === 0) {
-            throw new Error(`${printerID} does not exist`);
+    async queryTransaction(ctx, transactionID) {
+        const transactionAsBytes = await ctx.stub.getState(transactionID);
+        if (!transactionAsBytes || transactionAsBytes.length === 0) {
+            throw new Error(`${transactionID} does not exist`);
         }
-        console.log(printerAsBytes.toString());
-        return printerAsBytes.toString();
+        console.log(transactionAsBytes.toString());
+        return transactionAsBytes.toString();
     }
 
 }
