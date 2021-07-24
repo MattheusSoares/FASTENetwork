@@ -51,6 +51,7 @@ module.exports = {
       const templateDockerComposeCA = path.join(templateDockerComposeArchive, '/docker-compose-ca');
       const dockerComposeCaFile = path.resolve(__dirname, templateDockerComposeCA, 'docker-compose-ca.yaml');
       const dockerComposeCaOrgsFile = path.resolve(__dirname, templateDockerComposeCA, 'docker-compose-ca-orgs.yaml');
+      const dockerComposeCaOrdererFile = path.resolve(__dirname, templateDockerComposeCA, 'docker-compose-ca-orderer.yaml');
       //Variáveis docker-compose-couch
       const templateDockerComposeCouch = path.join(templateDockerComposeArchive, '/docker-compose-couch');
       const dockerComposeCouchFile = path.resolve(__dirname, templateDockerComposeCouch, 'docker-compose-couch.yaml');
@@ -101,7 +102,7 @@ module.exports = {
             fs.mkdirSync(pathNetworks.trim());
          }
          //Cria as pasta
-         await fs.copyFileSync('/home/romulo/www/FASTENTemp/template/.env', pathNetworks+'/.env');
+         //await fs.copyFileSync('/home/romulo/www/FASTENTemp/template/.env', pathNetworks+'/.env');
          //Arquivos do chaincode
          //Pastas
          await fs.mkdirSync(pathNetworks+"/chaincode");
@@ -137,7 +138,7 @@ module.exports = {
             await extra.changeWriting(dockerComposeCa, 'portca', portCa);
             portCa += 1000;
          }
-         await extra.appendWriting(dockerComposeCaOrgsFile, dockerComposeCa, 'orgname', 'orderer');
+         await extra.appendWriting(dockerComposeCaOrdererFile, dockerComposeCa);
          await extra.changeWriting(dockerComposeCa, 'portca', portCa);
          //Alterações gerais
          await extra.changeWriting(dockerComposeCa, 'networkname', nomeRede);
