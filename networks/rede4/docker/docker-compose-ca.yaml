@@ -6,7 +6,7 @@
 version: '2'
 
 networks:
-  rede1:
+  rede4:
 
 services:
 
@@ -24,7 +24,7 @@ services:
       - ../organizations/fabric-ca/org1:/etc/hyperledger/fabric-ca-server
     container_name: ca_org1
     networks:
-      - rede1
+      - rede4
   ca_org2:
     image: hyperledger/fabric-ca:$IMAGE_TAG
     environment:
@@ -39,7 +39,7 @@ services:
       - ../organizations/fabric-ca/org2:/etc/hyperledger/fabric-ca-server
     container_name: ca_org2
     networks:
-      - rede1
+      - rede4
   ca_orderer:
     image: hyperledger/fabric-ca:$IMAGE_TAG
     environment:
@@ -54,4 +54,4 @@ services:
       - ../organizations/fabric-ca/ordererOrg:/etc/hyperledger/fabric-ca-server
     container_name: orderer
     networks:
-      - rede1
+      - rede4

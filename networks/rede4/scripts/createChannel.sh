@@ -91,10 +91,26 @@ successln "Channel '$CHANNEL_NAME' created"
 
 infoln "Joining org1 peer0 to the channel..."
 joinChannel Org1 org1 peer0 7051
+infoln "Joining org1 peer1 to the channel..."
+joinChannel Org1 org1 peer1 9051
 infoln "Joining org2 peer0 to the channel..."
-joinChannel Org2 org2 peer0 9051
+joinChannel Org2 org2 peer0 11051
+infoln "Joining org2 peer1 to the channel..."
+joinChannel Org2 org2 peer1 13051
+infoln "Joining org2 peer2 to the channel..."
+joinChannel Org2 org2 peer2 15051
+infoln "Joining org2 peer3 to the channel..."
+joinChannel Org2 org2 peer3 17051
 infoln "Setting anchor peer for org1 portnumber"
 setAnchorPeer Org1 org1 peer0 7051
+infoln "Setting anchor peer for org1 portnumber"
+setAnchorPeer Org1 org1 peer1 9051
 infoln "Setting anchor peer for org2 portnumber"
-setAnchorPeer Org2 org2 peer0 9051
+setAnchorPeer Org2 org2 peer0 11051
+infoln "Setting anchor peer for org2 portnumber"
+setAnchorPeer Org2 org2 peer1 13051
+infoln "Setting anchor peer for org2 portnumber"
+setAnchorPeer Org2 org2 peer2 15051
+infoln "Setting anchor peer for org2 portnumber"
+setAnchorPeer Org2 org2 peer3 17051
 successln "Channel '$CHANNEL_NAME' joined"

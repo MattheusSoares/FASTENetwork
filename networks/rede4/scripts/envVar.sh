@@ -49,7 +49,7 @@ parsePeerConnectionParameters() {
   PEER_CONN_PARMS=""
   PEERS=""
   
-  for counter in {1..2}; 
+  for counter in {1..6}; 
   do
     setGlobals $1 $2 $3 $4
 

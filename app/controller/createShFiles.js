@@ -63,6 +63,9 @@ module.exports = {
       const envVarShFile = path.join(process.cwd(), '/template/envVar.sh');
       const fabricCA = path.join(process.cwd(), '/template/fabric-ca');
 
+      const registerEnrollFile = path.join(process.cwd(), '/template/registerEnroll/createOrgname.sh');
+      const registerEnrollOrdererFile = path.join(process.cwd(), '/template/registerEnroll/createOrderer.sh');
+
       const ccpSH = path.join(process.cwd(), '/template/ccp/ccp-generate.sh');
       const ccpJson = path.join(process.cwd(), '/template/ccp/ccp-template.json');
       const ccpYaml = path.join(process.cwd(), '/template/ccp/ccp-template.yaml');
@@ -88,6 +91,8 @@ module.exports = {
          await fs.copyFileSync(ccpSH, pathNetworks+"/organizations/ccp-generate.sh");
          await fs.copyFileSync(ccpYaml, pathNetworks+"/organizations/ccp-template.yaml");
          await fs.copyFileSync(ccpJson, pathNetworks+"/organizations/ccp-template.json");
+
+         await fs.copyFileSync(registerEnrollFile, pathNetworks+"/organizations/fabric-ca/registerEnroll.sh")
       };
 
 
@@ -249,6 +254,25 @@ module.exports = {
          
       }
 
+
+      async function createRegisterEnroll(){
+         const registerEnroll = path.join(pathNetworks, '/organizations/fabric-ca/registerEnroll.sh');
+         var portCA = 7054;
+         await extra.changeWriting(registerEnroll, 'Orgname', nomeOrg[0]);
+         await extra.changeWriting(registerEnroll, 'orgname', nomeOrg[0].toLowerCase());
+         await extra.changeWriting(registerEnroll, 'portca', portCA);
+         await extra.changeWriting(registerEnroll, 'numpeer', numPeer[0]-1);
+         portCA += 1000;
+         for (let i = 1; i < nomeOrg.length; i++) {
+            await extra.appendWriting(registerEnrollFile, registerEnroll, 'orgname', nomeOrg[i].toLowerCase());
+            await extra.changeWriting(registerEnroll, 'Orgname', nomeOrg[i]);
+            await extra.changeWriting(registerEnroll, 'portca', portCA);
+            await extra.changeWriting(registerEnroll, 'numpeer', numPeer[i]-1);
+            portCA += 1000;
+         }
+         await extra.appendWriting(registerEnrollOrdererFile, registerEnroll, 'portca', portCA);
+      }
+
       await createFolders();
 
       const networkSh = path.join(pathNetworks, '/network.sh');
@@ -263,6 +287,7 @@ module.exports = {
       await createCreateOrgsFiles();
       await createCreateChannelFile();
       await createDeployCCFiles();
+      await createRegisterEnroll();
       // await createEnvVar();
 
    }

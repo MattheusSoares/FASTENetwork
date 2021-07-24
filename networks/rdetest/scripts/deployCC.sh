@@ -314,8 +314,23 @@ packageChaincode
 infoln "Installing chaincode on peer0.org1..."
 installChaincode Org1 org1 peer0 7051
 
+infoln "Installing chaincode on peer1.org1..."
+installChaincode Org1 org1 peer1 9051
+
 infoln "Installing chaincode on peer0.org2..."
-installChaincode Org2 org2 peer0 9051
+installChaincode Org2 org2 peer0 11051
+
+infoln "Installing chaincode on peer1.org2..."
+installChaincode Org2 org2 peer1 13051
+
+infoln "Installing chaincode on peer2.org2..."
+installChaincode Org2 org2 peer2 15051
+
+infoln "Installing chaincode on peer0.org3..."
+installChaincode Org3 org3 peer0 17051
+
+infoln "Installing chaincode on peer1.org3..."
+installChaincode Org3 org3 peer1 19051
 
 ## query whether the chaincode is installed
 queryInstalled Org1 org1 peer0 7051
@@ -327,31 +342,48 @@ approveForMyOrg Org1 org1 peer0 7051
 ## expect org1 to have approved and org2 not to
 checkCommitReadiness Org1 org1 peer0 7051
 
-checkCommitReadiness Org2 org2 peer0 9051
+checkCommitReadiness Org2 org2 peer0 11051
+
+checkCommitReadiness Org3 org3 peer0 17051
 
 ## now approve also for org2
-approveForMyOrg Org2 org2 peer0 9051
+approveForMyOrg Org2 org2 peer0 11051
 
 ## check whether the chaincode definition is ready to be committed
 ## expect them both to have approved
 checkCommitReadiness Org1 org1 peer0 7051
-checkCommitReadiness Org2 org2 peer0 9051
+checkCommitReadiness Org2 org2 peer0 11051
+
+checkCommitReadiness Org3 org3 peer0 17051
+
+## now approve also for org3
+approveForMyOrg Org3 org3 peer0 17051
+
+## check whether the chaincode definition is ready to be committed
+## expect them both to have approved
+checkCommitReadiness Org1 org1 peer0 7051
+checkCommitReadiness Org2 org2 peer0 11051
+
+checkCommitReadiness Org3 org3 peer0 17051
 
 # ## now that we know for sure both orgs have approved, commit the definition
-commitChaincodeDefinition Org1 org1 peer0 7051 Org2 org2 peer0 9051 
+commitChaincodeDefinition Org1 org1 peer0 7051 Org1 org1 peer1 9051 Org2 org2 peer0 11051 Org2 org2 peer1 13051 Org2 org2 peer2 15051 Org3 org3 peer0 17051 Org3 org3 peer1 19051 
 
 ## query on both orgs to see that the definition committed successfully
 queryCommitted Org1 org1 peer0 7051
 
 ## query on both orgs to see that the definition committed successfully
-queryCommitted Org2 org2 peer0 9051
+queryCommitted Org2 org2 peer0 11051
+
+## query on both orgs to see that the definition committed successfully
+queryCommitted Org3 org3 peer0 17051
 
 ## Invoke the chaincode - this does require that the chaincode have the 'initLedger'
 ## method defined
 if [ "$CC_INIT_FCN" = "NA" ]; then
   infoln "Chaincode initialization is not required"
 else
-  chaincodeInvokeInit Org1 org1 peer0 7051 Org2 org2 peer0 9051 
+  chaincodeInvokeInit Org1 org1 peer0 7051 Org1 org1 peer1 9051 Org2 org2 peer0 11051 Org2 org2 peer1 13051 Org2 org2 peer2 15051 Org3 org3 peer0 17051 Org3 org3 peer1 19051 
 fi
 
 println "${C_GREEN} Chaincode ready to use"

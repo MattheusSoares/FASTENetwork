@@ -1,0 +1,193 @@
+# Copyright IBM Corp. All Rights Reserved.
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+
+version: '2'
+
+networks:
+  rdetest:
+
+services:
+  couchbd0:
+    container_name: couchbd0
+    image: couchdb:3.1.1
+    # Populate the COUCHDB_USER and COUCHDB_PASSWORD to set an admin user and password
+    # for CouchDB.  This will prevent CouchDB from operating in an "Admin Party" mode.
+    environment:
+      - COUCHDB_USER=admin
+      - COUCHDB_PASSWORD=adminpw
+    # Comment/Uncomment the port mapping if you want to hide/expose the CouchDB service,
+    # for example map it to utilize Fauxton User Interface in dev environments.
+    ports:
+      - "5984:5984"
+    networks:
+      - rdetest
+  peer0.org1.example.com:
+    environment:
+      - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=couchbd0:5984
+      # The CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME and CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD
+      # provide the credentials for ledger to connect to CouchDB.  The username and password must
+      # match the username and password set for the associated CouchDB.
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=admin
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=adminpw
+    depends_on:
+      - couchbd0
+
+  couchbd1:
+    container_name: couchbd1
+    image: couchdb:3.1.1
+    # Populate the COUCHDB_USER and COUCHDB_PASSWORD to set an admin user and password
+    # for CouchDB.  This will prevent CouchDB from operating in an "Admin Party" mode.
+    environment:
+      - COUCHDB_USER=admin
+      - COUCHDB_PASSWORD=adminpw
+    # Comment/Uncomment the port mapping if you want to hide/expose the CouchDB service,
+    # for example map it to utilize Fauxton User Interface in dev environments.
+    ports:
+      - "7984:5984"
+    networks:
+      - rdetest
+  peer1.org1.example.com:
+    environment:
+      - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=couchbd1:5984
+      # The CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME and CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD
+      # provide the credentials for ledger to connect to CouchDB.  The username and password must
+      # match the username and password set for the associated CouchDB.
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=admin
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=adminpw
+    depends_on:
+      - couchbd1
+
+  couchbd2:
+    container_name: couchbd2
+    image: couchdb:3.1.1
+    # Populate the COUCHDB_USER and COUCHDB_PASSWORD to set an admin user and password
+    # for CouchDB.  This will prevent CouchDB from operating in an "Admin Party" mode.
+    environment:
+      - COUCHDB_USER=admin
+      - COUCHDB_PASSWORD=adminpw
+    # Comment/Uncomment the port mapping if you want to hide/expose the CouchDB service,
+    # for example map it to utilize Fauxton User Interface in dev environments.
+    ports:
+      - "9984:5984"
+    networks:
+      - rdetest
+  peer0.org2.example.com:
+    environment:
+      - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=couchbd2:5984
+      # The CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME and CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD
+      # provide the credentials for ledger to connect to CouchDB.  The username and password must
+      # match the username and password set for the associated CouchDB.
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=admin
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=adminpw
+    depends_on:
+      - couchbd2
+
+  couchbd3:
+    container_name: couchbd3
+    image: couchdb:3.1.1
+    # Populate the COUCHDB_USER and COUCHDB_PASSWORD to set an admin user and password
+    # for CouchDB.  This will prevent CouchDB from operating in an "Admin Party" mode.
+    environment:
+      - COUCHDB_USER=admin
+      - COUCHDB_PASSWORD=adminpw
+    # Comment/Uncomment the port mapping if you want to hide/expose the CouchDB service,
+    # for example map it to utilize Fauxton User Interface in dev environments.
+    ports:
+      - "11984:5984"
+    networks:
+      - rdetest
+  peer1.org2.example.com:
+    environment:
+      - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=couchbd3:5984
+      # The CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME and CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD
+      # provide the credentials for ledger to connect to CouchDB.  The username and password must
+      # match the username and password set for the associated CouchDB.
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=admin
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=adminpw
+    depends_on:
+      - couchbd3
+
+  couchbd4:
+    container_name: couchbd4
+    image: couchdb:3.1.1
+    # Populate the COUCHDB_USER and COUCHDB_PASSWORD to set an admin user and password
+    # for CouchDB.  This will prevent CouchDB from operating in an "Admin Party" mode.
+    environment:
+      - COUCHDB_USER=admin
+      - COUCHDB_PASSWORD=adminpw
+    # Comment/Uncomment the port mapping if you want to hide/expose the CouchDB service,
+    # for example map it to utilize Fauxton User Interface in dev environments.
+    ports:
+      - "13984:5984"
+    networks:
+      - rdetest
+  peer2.org2.example.com:
+    environment:
+      - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=couchbd4:5984
+      # The CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME and CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD
+      # provide the credentials for ledger to connect to CouchDB.  The username and password must
+      # match the username and password set for the associated CouchDB.
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=admin
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=adminpw
+    depends_on:
+      - couchbd4
+
+  couchbd5:
+    container_name: couchbd5
+    image: couchdb:3.1.1
+    # Populate the COUCHDB_USER and COUCHDB_PASSWORD to set an admin user and password
+    # for CouchDB.  This will prevent CouchDB from operating in an "Admin Party" mode.
+    environment:
+      - COUCHDB_USER=admin
+      - COUCHDB_PASSWORD=adminpw
+    # Comment/Uncomment the port mapping if you want to hide/expose the CouchDB service,
+    # for example map it to utilize Fauxton User Interface in dev environments.
+    ports:
+      - "15984:5984"
+    networks:
+      - rdetest
+  peer0.org3.example.com:
+    environment:
+      - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=couchbd5:5984
+      # The CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME and CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD
+      # provide the credentials for ledger to connect to CouchDB.  The username and password must
+      # match the username and password set for the associated CouchDB.
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=admin
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=adminpw
+    depends_on:
+      - couchbd5
+
+  couchbd6:
+    container_name: couchbd6
+    image: couchdb:3.1.1
+    # Populate the COUCHDB_USER and COUCHDB_PASSWORD to set an admin user and password
+    # for CouchDB.  This will prevent CouchDB from operating in an "Admin Party" mode.
+    environment:
+      - COUCHDB_USER=admin
+      - COUCHDB_PASSWORD=adminpw
+    # Comment/Uncomment the port mapping if you want to hide/expose the CouchDB service,
+    # for example map it to utilize Fauxton User Interface in dev environments.
+    ports:
+      - "17984:5984"
+    networks:
+      - rdetest
+  peer1.org3.example.com:
+    environment:
+      - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=couchbd6:5984
+      # The CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME and CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD
+      # provide the credentials for ledger to connect to CouchDB.  The username and password must
+      # match the username and password set for the associated CouchDB.
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=admin
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=adminpw
+    depends_on:
+      - couchbd6
+
