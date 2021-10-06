@@ -58,6 +58,11 @@ module.exports = {
       const deployCCQueryCommitedFile = path.resolve(__dirname, templateDeployCC, 'deployCC_queryCommited.sh');
       const deployCCEndFile = path.resolve(__dirname, templateDeployCC, 'deployCC_end.sh');
 
+      const fabricCaServer = path.join(process.cwd(), '/template/orgName');
+      const fabricCaServerFile = path.resolve(__dirname, fabricCaServer, 'fabric-ca-server-config.yaml');
+      const fabricCaServerAffiliationsFile = path.resolve(__dirname, fabricCaServer, 'fabric-ca-server-config-affiliations.yaml');
+      const fabricCaServerEndFile = path.resolve(__dirname, fabricCaServer, 'fabric-ca-server-config-end.yaml');
+
       const networkShFile = path.join(process.cwd(), '/template/network.sh');
       const verifyShFile = path.join(process.cwd(), '/template/verify.sh');
       const envVarShFile = path.join(process.cwd(), '/template/envVar.sh');
@@ -273,6 +278,22 @@ module.exports = {
          await extra.appendWriting(registerEnrollOrdererFile, registerEnroll, 'portca', portCA);
       }
 
+      async function createFabricCaServer() {
+         for (let i = 0; i < nomeOrg.length; i++) {
+            await fs.mkdirSync(pathNetworks + '/organizations/fabric-ca/' + nomeOrg[i].toLowerCase());
+            await fs.copyFileSync(fabricCaServerFile, pathNetworks + '/organizations/fabric-ca/' + nomeOrg[i].toLowerCase() + '/fabric-ca-server-config.yaml');
+
+            const fabricCaServerPath = path.join(pathNetworks, '/organizations/fabric-ca/' + nomeOrg[i].toLowerCase() + '/fabric-ca-server-config.yaml');
+            await extra.changeWriting(fabricCaServerPath, 'Orgname', nomeOrg[i]);
+            for (let i = 0; i < nomeOrg.length; i++) {
+               await extra.appendWriting(fabricCaServerAffiliationsFile, fabricCaServerPath, 'orgname', nomeOrg[i].toLowerCase());
+            }
+            await extra.appendWriting(fabricCaServerEndFile, fabricCaServerPath, 'orgname', nomeOrg[i].toLowerCase());
+         }
+
+ 
+      }
+
       await createFolders();
 
       const networkSh = path.join(pathNetworks, '/network.sh');
@@ -288,6 +309,7 @@ module.exports = {
       await createCreateChannelFile();
       await createDeployCCFiles();
       await createRegisterEnroll();
+      await createFabricCaServer();
       // await createEnvVar();
 
    }
