@@ -3,6 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const readline = require('readline');
 const copyFilePromise = util.promisify(fs.copyFile);
+var wrench = require('wrench');
 
    //Função para auxilio
    async function processLineByLine(file) {
@@ -172,6 +173,10 @@ module.exports = {
          console.log(element)
          return copyFilePromise(path.join(srcDir, element), path.join(destDir, element));
       }));
+  },
+
+  async recCopy(srcDir, destDir) {
+   wrench.copyDirSyncRecursive(srcDir, destDir);
   }
   
    
