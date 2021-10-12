@@ -259,7 +259,7 @@ module.exports = {
       const pathNetworks = networks + '/' + rededatabase.nomeRede;
 
       shell.cd(pathNetworks);
-      shell.exec('./network.sh up');
+      shell.exec('./network.sh up createChannel -ca -s couchdb');
       shell.cd('../..');
       
   },
@@ -291,11 +291,13 @@ async deployCC(rededatabase){
       
    const networks = path.join(process.cwd(), 'networks');
    const pathNetworks = networks + '/' + rededatabase.nomeRede;
-   const chaincode = '/home/romulo/www/FASTENTemp/networks/' + rededatabase.nomeRede + '/chaincode'
+   
+   const chaincode = path.resolve(process.cwd(), networks, rededatabase.nomeRede + '/chaincode');
 
    shell.cd(pathNetworks);
    shell.exec('./network.sh deployCC -ccn fastenetwork -ccv 1 -cci initLedger -ccl javascript -ccp ' + chaincode);
    shell.cd('../..');
 }
+
 
 }
