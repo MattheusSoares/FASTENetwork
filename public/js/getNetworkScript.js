@@ -79,37 +79,19 @@ $(document).on('click', '.infoNetwork', function () {
         conteudoBotoes += "<div class='col-lg-12'>";
                 
             conteudoBotoes += "<div class='row'>";
-                conteudoBotoes += "<div class='col-lg-6' style='text-align: center;'>";
-                    conteudoBotoes += "<a class='btn btn-link startNetwork' title = 'Inicializar rede' href='javascript:void(0)' data-_idrede='" + rede._id + "'>Inicializar rede</a>";
+                conteudoBotoes += "<div class='col-lg-4' style='text-align: center;'>";
+                    conteudoBotoes += "<a class='btn btn-success startNetwork' title = 'Inicializar rede' href='javascript:void(0)' data-_idrede='" + rede._id + "'>Inicializar rede</a>";
                 conteudoBotoes += "</div>";
-                conteudoBotoes += "<div class='col-lg-6' style='text-align: center;'>";
-                    conteudoBotoes += "<a class='btn btn-link stopNetwork' title = 'Parar rede' href='javascript:void(0)' data-_idrede='" + rede._id + "'>Parar rede</a>";
+                conteudoBotoes += "<div class='col-lg-4' style='text-align: center;'>";
+                    conteudoBotoes += "<a class='btn btn-danger stopNetwork' title = 'Parar rede' href='javascript:void(0)' data-_idrede='" + rede._id + "'>Parar rede</a>";
+                conteudoBotoes += "</div>";
+                conteudoBotoes += "<div class='col-lg-4' style='text-align: center;'>";
+                    conteudoBotoes += "<a class='btn btn-primary installChaincode' title = 'Instalar Chaincode' href='javascript:void(0)' data-_idrede='" + rede._id + "'>Instalar Chaincode</a>";
                 conteudoBotoes += "</div>";
             conteudoBotoes += "</div>";
+            
+            conteudoBotoes += "<div class='row'>";
                 
-            conteudoBotoes += "<div class='row'>";
-                conteudoBotoes += "<div class='col-lg-12' style='text-align: center;'>";
-                    conteudoBotoes += "<a class='btn btn-link createChannel' title = 'Criar canal' href='javascript:void(0)' data-_idrede='" + rede._id + "'>Criar canal</a>";
-                conteudoBotoes += "</div>";
-            conteudoBotoes += "</div>";
-            
-            conteudoBotoes += "<div class='row'>";
-                conteudoBotoes += "<div class='col-lg-6' style='text-align: center;'>";
-                    conteudoBotoes += "<a class='btn btn-link createIdentity' title = 'Criar identidades' href='javascript:void(0)' data-_idrede='" + rede._id + "'>Criar identidades</a>";
-                conteudoBotoes += "</div>";
-                conteudoBotoes += "<div class='col-lg-6' style='text-align: center;'>";
-                    conteudoBotoes += "<a class='btn btn-link connectChannel' title = 'Conectar ao canal' href='javascript:void(0)' data-_idrede='" + rede._id + "'>Conectar ao canal</a>";
-                conteudoBotoes += "</div>";
-            conteudoBotoes += "</div>";
-            
-            
-            conteudoBotoes += "<div class='row'>";
-                conteudoBotoes += "<div class='col-lg-6' style='text-align: center;'>";
-                    conteudoBotoes += "<a class='btn btn-link installChaincode' title = 'Instalar Chaincode' href='javascript:void(0)' data-_idrede='" + rede._id + "'>Instalar Chaincode</a>";
-                conteudoBotoes += "</div>";
-                conteudoBotoes += "<div class='col-lg-6' style='text-align: center;'>";
-                    conteudoBotoes += "<a class='btn btn-link instantiateChaincode' title = 'Instanciar Chaincode' href='javascript:void(0)' data-_idrede='" + rede._id + "'>Instanciar Chaincode</a>";
-                conteudoBotoes += "</div>";
             conteudoBotoes += "</div>";
             
         conteudoBotoes += "</div>";
